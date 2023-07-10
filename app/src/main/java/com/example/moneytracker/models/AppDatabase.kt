@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.datastore1.models.EarnedDao
 
-@Database(entities = [Earned::class], version = 1)
+@Database(entities = [Earned::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): EarnedDao
 

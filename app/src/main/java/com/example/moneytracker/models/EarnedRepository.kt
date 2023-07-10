@@ -14,8 +14,16 @@ class EarnedRepository(private val earnedDao: EarnedDao) {
         return earnedDao.getMonth(year)
     }
 
-    fun getTotalEarnedAYear(): LiveData<List<Double>>{
-        return earnedDao.totalEarnedAYear()
+    fun getTotalEarnedAYear(year: String): LiveData<Double>{
+        return earnedDao.totalEarnedAYear(year)
+    }
+
+    fun getTotalEarnedAMonth(month: String, year: String): LiveData<Double>{
+        return earnedDao.totalEarnedAMonth(month, year)
+    }
+
+    fun getTotalEarnedADay(day: String, month: String, year: String): LiveData<Double>{
+        return earnedDao.totalEarnedADay(day, month, year)
     }
 
     fun getUniqueYear(): LiveData<List<String>> {

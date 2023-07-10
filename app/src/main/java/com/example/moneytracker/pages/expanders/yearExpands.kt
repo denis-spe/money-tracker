@@ -7,11 +7,11 @@ import com.example.moneytracker.models.EarnedViewModel
 @Composable
 fun YearExpander(idx: Int, earnedViewModel: EarnedViewModel){
     // Get the total earned a year
-    earnedViewModel.getTotalEarnedAYear()
+    earnedViewModel.getTotalEarnedAYear("2021")
 
     // load the live updated data
-    val totalEarnedAYear: List<Double> by earnedViewModel.liveDoubleData.observeAsState(emptyList())
-    val totalEarned: Double? = totalEarnedAYear.getOrNull(idx)
+    val totalEarnedAYear: Double by earnedViewModel.liveEarnedAYear.observeAsState(0.0)
+    val totalEarned: Double? = totalEarnedAYear
 
     Text(text = totalEarned.toString())
 }
