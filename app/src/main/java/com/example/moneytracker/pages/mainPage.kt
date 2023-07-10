@@ -135,14 +135,14 @@ fun ScaffoldMainPageContents(
                         )
                         if (currentDayOfMonth < 10)
                             Text(
-                                text = "$weekDay, 0$currentDayOfMonth",
+                                text = "$weekDay\n0$currentDayOfMonth",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 30.sp
                             )
                         else
                             Text(
-                                text = "$weekDay, $currentDayOfMonth",
+                                text = "$weekDay\n$currentDayOfMonth",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 30.sp
@@ -207,7 +207,7 @@ fun ScaffoldMainPageContents(
                     Year Container
                  */
                 Container(
-                    height = 0.19f,
+                    height = 0.25f,
                     firstPart = {
                         Text(
                             text = "Year",
@@ -357,7 +357,7 @@ fun Container(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.2f)
+                .fillMaxWidth(0.3f)
                 .padding(4.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
@@ -370,7 +370,7 @@ fun Container(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.3f),
+                .fillMaxWidth(0.2f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -394,7 +394,7 @@ fun Container(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.7f),
+                .fillMaxWidth(0.4f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
