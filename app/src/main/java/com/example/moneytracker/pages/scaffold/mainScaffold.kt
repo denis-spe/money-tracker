@@ -3,22 +3,42 @@ package com.example.moneytracker.pages.scaffold
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import com.example.moneytracker.R
 import com.example.moneytracker.alert.ShowAlertDialogWithTextField
-import com.example.moneytracker.models.EarnedViewModel
+import com.example.moneytracker.modelDrawer.ModelDrawerContents
+import com.example.moneytracker.models.income.IncomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,10 +46,11 @@ import com.example.moneytracker.models.EarnedViewModel
 @Composable
 fun ScaffoldComponent(
     showDialog: MutableState<Boolean>,
-    earnedViewModel: EarnedViewModel,
-    ScaffoldContents: @Composable () -> Unit
-){
-
+    incomeViewModel: IncomeViewModel,
+    scaffoldContents: @Composable () -> Unit
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    val isBottomSheetOpen = remember { mutableStateOf(false) }
     val earnedState = remember { mutableStateOf(TextFieldValue()) }
     val dayOfWeekState = remember { mutableStateOf(TextFieldValue()) }
     val dayState = remember { mutableStateOf(TextFieldValue()) }
@@ -40,18 +61,96 @@ fun ScaffoldComponent(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
 
-            FloatingActionButton(
-                onClick = { showDialog.value = true },
-                shape = FloatingActionButtonDefaults.shape
+            val width = if (isExpanded) {
+                130.dp
+            } else {
+                60.dp
+            }
+
+            Column(
+                modifier = Modifier
+                    .wrapContentSize(align = Alignment.CenterEnd)
+                    .width(width)
             ) {
-                Icon(
-                    Icons.Outlined.Add,
-                    contentDescription = "Add Dialog",
-                )
+
+                if (isExpanded) {
+
+                    FloatActionButton(
+                        containerColor = Color(255, 73, 158),
+                        text = "Debts",
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.borrow),
+                                contentDescription = "Add Dialog",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    ) {
+                        isBottomSheetOpen.value = true
+                    }
+
+                    Spacer(modifier = Modifier.height(7.dp))
+
+                    FloatActionButton(
+                        containerColor = Color(53, 206, 141),
+                        text = "Income",
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.income),
+                                contentDescription = "Add Dialog",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    ) {
+                        // OnClick listener
+                        showDialog.value = true
+
+                    }
+
+                    Spacer(modifier = Modifier.height(7.dp))
+
+                    FloatActionButton(
+                        containerColor = Color(240, 15, 6, 94),
+                        text = "Expense",
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.expenses),
+                                contentDescription = "Add Dialog",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    ) {
+
+                        // OnClick listener
+
+                    }
+
+                    Spacer(modifier = Modifier.height(7.dp))
+                }
+
+
+                FloatActionButton(
+                    icon = {
+                        if (isExpanded)
+                            Icon(
+                                Icons.Outlined.Clear,
+                                contentDescription = "Add Dialog",
+                            )
+                        else {
+                            Icon(
+                                Icons.Outlined.Add,
+                                contentDescription = "Add Dialog",
+                            )
+                        }
+                    }
+                ) {
+                    // onClick listener
+                    isExpanded = !isExpanded
+                }
             }
         }
     ) {
-        ScaffoldContents()
+        scaffoldContents()
     }
 
     ShowAlertDialogWithTextField(
@@ -61,7 +160,51 @@ fun ScaffoldComponent(
         dayState = dayState,
         monthState = monthState,
         yearState = yearState,
-        earnedViewModel = earnedViewModel
+        incomeViewModel = incomeViewModel
     )
+
+    ModelDrawerContents(
+        isBottomSheetOpen = isBottomSheetOpen,
+    )
+}
+
+/*
+* Clickable Circle float action button
+*/
+@Composable
+fun FloatActionButton(
+    containerColor: Color? = MaterialTheme.colorScheme.primaryContainer,
+    text: String? = null,
+    icon: @Composable () -> Unit,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(align = Alignment.CenterEnd)
+    ) {
+        if (text != null)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.height(60.dp)
+            ) {
+                Text(text = text)
+            }
+        Spacer(modifier = Modifier.width(5.dp))
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            FloatingActionButton(
+                onClick = { onClick() },
+                shape = RoundedCornerShape(50),
+                containerColor = containerColor!!
+            ) {
+                icon()
+            }
+
+        }
+    }
 }
 

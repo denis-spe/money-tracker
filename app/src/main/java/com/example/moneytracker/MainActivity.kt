@@ -12,20 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.moneytracker.models.AppDatabase
-import com.example.moneytracker.models.EarnedRepository
-import com.example.moneytracker.models.EarnedViewModel
+import com.example.moneytracker.models.income.IncomeRepository
+import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.ui.theme.MoneyTrackerTheme
 
 class MainActivity : ComponentActivity() {
-    private lateinit var earnedViewModel: EarnedViewModel
+    private lateinit var incomeViewModel: IncomeViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val userDao = AppDatabase.getInstance(this).userDao()
-        val earnedRepository = EarnedRepository(userDao)
-        earnedViewModel = EarnedViewModel(earnedRepository, this)
+        val userDao = AppDatabase.getInstance(this).incomeDao()
+        val incomeRepository = IncomeRepository(userDao)
+        incomeViewModel = IncomeViewModel(incomeRepository, this)
 
         setContent {
             MoneyTrackerTheme {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    App(earnedViewModel)
+                    App(incomeViewModel)
                 }
             }
         }

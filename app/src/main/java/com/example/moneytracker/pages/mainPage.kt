@@ -1,11 +1,9 @@
 package com.example.moneytracker.pages
 
-import YearExpander
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -34,10 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,35 +40,33 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.moneytracker.alert.getDayOfWeek
 import com.example.moneytracker.alert.getMonthName
-import com.example.moneytracker.charts.MyScreen
-import com.example.moneytracker.models.EarnedViewModel
+import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
 import com.example.moneytracker.statistic.sum
 import java.util.Calendar
-import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainPage(navController: NavHostController, earnedViewModel: EarnedViewModel) {
+fun MainPage(navController: NavHostController, incomeViewModel: IncomeViewModel) {
     val showDialog = remember { mutableStateOf(false) }
 
 
     // Get the unique years
-    earnedViewModel.getUniqueYear()
+    incomeViewModel.getUniqueYear()
 
     // load the live updated data
-    val earnings: List<String> by earnedViewModel.liveStringData.observeAsState(emptyList())
+    val earnings: List<String> by incomeViewModel.liveStringData.observeAsState(emptyList())
 
     // Scaffold Component
     ScaffoldComponent(
         showDialog = showDialog,
-        earnedViewModel = earnedViewModel
+        incomeViewModel = incomeViewModel
     ) {
         ScaffoldMainPageContents(
             navController,
             earnings = earnings,
-            earnedViewModel = earnedViewModel
+            incomeViewModel = incomeViewModel
         )
     }
 }
@@ -82,7 +75,7 @@ fun MainPage(navController: NavHostController, earnedViewModel: EarnedViewModel)
 fun ScaffoldMainPageContents(
     navController: NavController,
     earnings: List<String>,
-    earnedViewModel: EarnedViewModel
+    incomeViewModel: IncomeViewModel
 ) {
     Column(
         modifier = Modifier
@@ -125,8 +118,10 @@ fun ScaffoldMainPageContents(
                 /*
                     Day Container
                  */
-                Container(
+                CurrentDateContainer(
                     height = 0.14f,
+                    expandedContents = {
+                    },
                     firstPart = {
                         Text(
                             text = "Day",
@@ -151,14 +146,14 @@ fun ScaffoldMainPageContents(
                     secondPart = { /*TODO*/ }
                 ) {
                     // fetch the live data
-                    earnedViewModel.getTotalEarnedADay(
+                    incomeViewModel.getTotalEarnedADay(
                         currentDayOfMonth.toString(),
                         getMonthName(currentMonth),
                         currentYear.toString()
                     )
 
                     // Get list of earning in a day
-                    val currentEarningADay: Double? = earnedViewModel
+                    val currentEarningADay: Double? = incomeViewModel
                         .liveEarnedADay.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -170,8 +165,11 @@ fun ScaffoldMainPageContents(
                 /*
                     Month Container
                  */
-                Container(
+                CurrentDateContainer(
                     height = 0.18f,
+                    expandedContents = {
+
+                    },
                     firstPart = {
                         Text(
                             text = "Month",
@@ -188,13 +186,13 @@ fun ScaffoldMainPageContents(
                     secondPart = { /*TODO*/ }
                 ) {
                     // fetch the live data
-                    earnedViewModel.getTotalEarnedAMonth(
+                    incomeViewModel.getTotalEarnedAMonth(
                         getMonthName(currentMonth),
                         currentYear.toString()
                     )
 
                     // Get list of earning in a year
-                    val currentEarningAMonth: Double? = earnedViewModel
+                    val currentEarningAMonth: Double? = incomeViewModel
                         .liveEarnedAMonth.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -206,8 +204,54 @@ fun ScaffoldMainPageContents(
                 /*
                     Year Container
                  */
-                Container(
+                CurrentDateContainer(
                     height = 0.25f,
+                    expandedContents = {
+                        Row() {
+                            Column() {
+                                // fetch the live min earning for a year
+                                incomeViewModel.getMinForEarningAYear(currentYear.toString())
+
+                                // Get min in a year
+                                val minEarningInYear: Double? = incomeViewModel
+                                    .liveMinForEarningAYear
+                                    .observeAsState(0.0).value
+                                if (minEarningInYear != null) {
+                                    Text(
+                                        text = "Min Income: $minEarningInYear",
+                                        fontSize = 12.sp
+                                    )
+                                }
+                                if (minEarningInYear != null) {
+                                    Text(
+                                        text = "Min Expense: $minEarningInYear",
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column() {
+                                // fetch the live max earning for a year
+                                incomeViewModel.getMaxForEarningAYear(currentYear.toString())
+
+                                // Get max earning in a year
+                                val maxEarningInYear: Double? = incomeViewModel
+                                    .liveMeanForEarningAYear.observeAsState(0.0).value
+                                if (maxEarningInYear != null) {
+                                    Text(
+                                        text = "Max Income: $maxEarningInYear",
+                                        fontSize = 12.sp
+                                    )
+                                }
+                                if (maxEarningInYear != null) {
+                                    Text(
+                                        text = "Max Expense: $maxEarningInYear",
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                        }
+                    },
                     firstPart = {
                         Text(
                             text = "Year",
@@ -224,10 +268,10 @@ fun ScaffoldMainPageContents(
                     secondPart = { /*TODO*/ }
                 ) {
                     // fetch the live data
-                    earnedViewModel.getTotalEarnedAYear(currentYear.toString())
+                    incomeViewModel.getTotalEarnedAYear(currentYear.toString())
 
                     // Get list of earning in a year
-                    val currentEarningAYear: Double? = earnedViewModel
+                    val currentEarningAYear: Double? = incomeViewModel
                         .liveEarnedAYear.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
@@ -302,7 +346,7 @@ fun ScaffoldMainPageContents(
 //                                .height(150.dp)
 //                        ) {
 //
-////                            YearExpander(idx, earnedViewModel)
+////                            YearExpander(idx, incomeViewModel)
 //                            Column() {
 //                                MyScreen()
 //                            }
@@ -317,8 +361,9 @@ fun ScaffoldMainPageContents(
 }
 
 @Composable
-fun Container(
+fun CurrentDateContainer(
     height: Float = 0.13f,
+    expandedContents: @Composable () -> Unit,
     firstPart: @Composable () -> Unit,
     secondPart: @Composable () -> Unit,
     thirdPart: @Composable () -> Unit,
@@ -339,11 +384,13 @@ fun Container(
     // Month Column
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(
-                topStart = 9.dp, topEnd = 9.dp,
-                bottomStart = bottomStart.dp,
-                bottomEnd = bottomEnd.dp
-            ))
+            .clip(
+                RoundedCornerShape(
+                    topStart = 9.dp, topEnd = 9.dp,
+                    bottomStart = bottomStart.dp,
+                    bottomEnd = bottomEnd.dp
+                )
+            )
             .fillMaxWidth()
             .fillMaxHeight(height)
             .background(
@@ -427,8 +474,12 @@ fun Container(
                 .height(50.dp)
         ) {
 
-            Column() {
-                Text(text = "mean")
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                expandedContents()
             }
         }
         expandedIcon = Icons.Default.KeyboardArrowDown

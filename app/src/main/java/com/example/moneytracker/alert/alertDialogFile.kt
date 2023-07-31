@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
-import com.example.moneytracker.models.EarnedViewModel
+import com.example.moneytracker.models.income.IncomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -20,7 +20,7 @@ fun ShowAlertDialogWithTextField(
     dayState: MutableState<TextFieldValue>,
     monthState: MutableState<TextFieldValue>,
     yearState: MutableState<TextFieldValue>,
-    earnedViewModel: EarnedViewModel,
+    incomeViewModel: IncomeViewModel,
 ) {
 
     Column {
@@ -47,12 +47,13 @@ fun ShowAlertDialogWithTextField(
 
                             if (earned != "" && dayOfWeek != "") {
                                 // Example usage: Insert user
-                                earnedViewModel.insertUser(
+                                incomeViewModel.insertUser(
                                     dayOfWeek = dayOfWeek,
                                     day = day,
                                     month = month,
                                     year = year,
-                                    earned =  earned.toDouble())
+                                    earned = earned.toDouble()
+                                )
                                 earnedState.value = TextFieldValue("")
                                 dayOfWeekState.value = TextFieldValue("")
                                 dayState.value = TextFieldValue("")

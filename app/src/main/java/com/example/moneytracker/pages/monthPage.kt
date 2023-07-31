@@ -32,24 +32,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.moneytracker.models.EarnedViewModel
+import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MonthPage(year: String, navController: NavHostController, earnedViewModel: EarnedViewModel) {
+fun MonthPage(year: String, navController: NavHostController, incomeViewModel: IncomeViewModel) {
     // Show dialog state
     val showDialog = remember { mutableStateOf(false) }
 
     // Get the live added month
-    earnedViewModel.getMonth(year)
-    val earnings: List<String> by earnedViewModel.liveStringData.observeAsState(emptyList())
+    incomeViewModel.getMonth(year)
+    val earnings: List<String> by incomeViewModel.liveStringData.observeAsState(emptyList())
 
     // Scaffold Component
     ScaffoldComponent(
         showDialog = showDialog,
-        earnedViewModel = earnedViewModel
-    ){
+        incomeViewModel = incomeViewModel
+    ) {
         ScaffoldMonthPageContents(
             year,
             navController = navController,
