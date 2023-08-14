@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,9 +41,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.moneytracker.alert.getDayOfWeek
 import com.example.moneytracker.alert.getMonthName
+import com.example.moneytracker.charts.DonutChartInput
+import com.example.moneytracker.charts.DonutPieChart
 import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
-import com.example.moneytracker.statistic.sum
+import com.example.moneytracker.statistic.TotalSumViewer
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -77,6 +80,8 @@ fun ScaffoldMainPageContents(
     earnings: List<String>,
     incomeViewModel: IncomeViewModel
 ) {
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -123,27 +128,65 @@ fun ScaffoldMainPageContents(
                     expandedContents = {
                     },
                     firstPart = {
-                        Text(
-                            text = "Day",
-                            fontWeight = FontWeight(600),
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        if (currentDayOfMonth < 10)
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+
                             Text(
-                                text = "$weekDay\n0$currentDayOfMonth",
+                                text = "Day",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 30.sp
+                                fontSize = 20.sp,
+                                modifier = Modifier.padding(bottom = 0.1.dp)
                             )
-                        else
+
                             Text(
-                                text = "$weekDay\n$currentDayOfMonth",
+                                text = "$weekDay",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 30.sp
+                                fontSize = 17.sp,
+                                modifier = Modifier.padding(top = 0.1.dp),
+
                             )
+
+
+                            if (currentDayOfMonth < 10) {
+                                Text(
+                                    text = "0$currentDayOfMonth",
+                                    fontWeight = FontWeight(600),
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    fontSize = 17.sp
+                                )
+                            }
+                            else
+                                Text(
+                                    text = "$currentDayOfMonth",
+                                    fontWeight = FontWeight(600),
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    fontSize = 17.sp
+                                )
+                        }
                     },
-                    secondPart = { /*TODO*/ }
+                    secondPart = {
+                        // fetch the live data
+                        incomeViewModel.getTotalEarnedADay(
+                            currentDayOfMonth.toString(),
+                            getMonthName(currentMonth),
+                            currentYear.toString()
+                        )
+
+                        // Get list of earning in a day
+                        val currentEarningADay: Double? = incomeViewModel
+                            .liveEarnedADay.observeAsState(0.0).value
+
+                        val listOfDonutPieInput: List<DonutChartInput> = listOf(
+                            DonutChartInput(currentEarningADay?:0.0, Color(76, 175, 80, 255)),
+                            DonutChartInput(50.0, Color(223, 7, 56, 255))
+                        )
+
+                        DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
+                    }
                 ) {
                     // fetch the live data
                     incomeViewModel.getTotalEarnedADay(
@@ -157,7 +200,7 @@ fun ScaffoldMainPageContents(
                         .liveEarnedADay.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    sum(income = currentEarningADay, expense = emptyList())
+                    TotalSumViewer(income = currentEarningADay, expense = 0.0)
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -171,19 +214,43 @@ fun ScaffoldMainPageContents(
 
                     },
                     firstPart = {
-                        Text(
-                            text = "Month",
-                            fontWeight = FontWeight(600),
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Text(
-                            text = getMonthName(currentMonth),
-                            fontWeight = FontWeight(600),
-                            color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 30.sp
-                        )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Month",
+                                fontWeight = FontWeight(600),
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 20.sp
+                            )
+                            Text(
+                                text = getMonthName(currentMonth),
+                                fontWeight = FontWeight(600),
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 17.sp
+                            )
+                        }
                     },
-                    secondPart = { /*TODO*/ }
+                    secondPart = {
+
+                        // fetch the live data
+                        incomeViewModel.getTotalEarnedAMonth(
+                            getMonthName(currentMonth),
+                            currentYear.toString()
+                        )
+
+                        // Get list of earning in a Month
+                        val currentEarningAMonth: Double? = incomeViewModel
+                            .liveEarnedAMonth.observeAsState(0.0).value
+
+                        val listOfDonutPieInput: List<DonutChartInput> = listOf(
+                            DonutChartInput(currentEarningAMonth?:0.0, Color(76, 175, 80, 255)),
+                            DonutChartInput(50.0, Color(223, 7, 56, 255))
+                        )
+
+                        DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
+                    }
                 ) {
                     // fetch the live data
                     incomeViewModel.getTotalEarnedAMonth(
@@ -191,12 +258,12 @@ fun ScaffoldMainPageContents(
                         currentYear.toString()
                     )
 
-                    // Get list of earning in a year
+                    // Get list of earning in a Month
                     val currentEarningAMonth: Double? = incomeViewModel
                         .liveEarnedAMonth.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    sum(income = currentEarningAMonth, expense = emptyList())
+                    TotalSumViewer(income = currentEarningAMonth, expense = 0.0)
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -256,16 +323,32 @@ fun ScaffoldMainPageContents(
                         Text(
                             text = "Year",
                             fontWeight = FontWeight(600),
-                            color = MaterialTheme.colorScheme.onBackground
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 20.sp
                         )
                         Text(
                             text = currentYear.toString(),
                             fontWeight = FontWeight(600),
                             color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 30.sp
+                            fontSize = 17.sp
                         )
                     },
-                    secondPart = { /*TODO*/ }
+                    secondPart = {
+
+                        // fetch the live data
+                        incomeViewModel.getTotalEarnedAYear(currentYear.toString())
+
+                        // Get list of earning in a year
+                        val currentEarningAYear: Double? = incomeViewModel
+                            .liveEarnedAYear.observeAsState(0.0).value
+
+                        val listOfDonutPieInput: List<DonutChartInput> = listOf(
+                            DonutChartInput(currentEarningAYear?:0.0, Color(76, 175, 80, 255)),
+                            DonutChartInput(50.0, Color(223, 7, 56, 255))
+                        )
+
+                        DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
+                    }
                 ) {
                     // fetch the live data
                     incomeViewModel.getTotalEarnedAYear(currentYear.toString())
@@ -275,7 +358,7 @@ fun ScaffoldMainPageContents(
                         .liveEarnedAYear.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    sum(income = currentEarningAYear, expense = emptyList())
+                    TotalSumViewer(income = currentEarningAYear, expense = 0.0)
                 }
 
             }
@@ -397,21 +480,20 @@ fun CurrentDateContainer(
                 Brush.linearGradient(listOf(Color.DarkGray, Color.LightGray)),
                 alpha = 0.3f
             )
-            .padding(4.dp)
+            .padding(1.dp)
     ) {
 
         // Current date
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.3f)
-                .padding(4.dp),
-            horizontalAlignment = Alignment.Start,
+                .fillMaxWidth(0.2f),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             firstPart()
         }
-        Spacer(modifier = Modifier.width(2.dp))
+        Spacer(modifier = Modifier.width(1.dp))
 
         // Pie chart
         Column(
@@ -423,25 +505,27 @@ fun CurrentDateContainer(
         ) {
             secondPart()
         }
-        Spacer(modifier = Modifier.width(2.dp))
+        Spacer(modifier = Modifier.width(1.dp))
 
         // Statistic section
         Column(
             modifier = Modifier
+                .padding(start = 5.dp)
                 .fillMaxHeight()
-                .fillMaxWidth(0.8f)
-                .padding(1.dp),
+                .fillMaxWidth(0.9f),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
             thirdPart()
         }
 
+        Spacer(modifier = Modifier.width(1.dp))
+
         // Drop contents
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.4f),
+                .fillMaxWidth(0.9f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
