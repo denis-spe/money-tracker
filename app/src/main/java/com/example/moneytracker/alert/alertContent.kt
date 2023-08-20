@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +38,9 @@ fun AlertDialogContent(
     yearState: MutableState<TextFieldValue>,
     mContext: Context = LocalContext.current
 ) {
+
+    // Dialog data class
+    val dialogDataClass = DialogDataClass()
 
     Column {
         TextField(
@@ -49,24 +55,70 @@ fun AlertDialogContent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
-        Button(onClick = { calenderContent(
-            mContext,
-            dayOfWeekState = dayOfWeekState,
-            dayState = dayState,
-            monthState = monthState,
-            yearState = yearState,
-        ).show() }) {
+        Button(
+            colors = dialogDataClass.dateButtonColor,
+            shape = dialogDataClass.buttonShape,
+            onClick = {
+                calenderContent(
+                    mContext,
+                    dayOfWeekState = dayOfWeekState,
+                    dayState = dayState,
+                    monthState = monthState,
+                    yearState = yearState,
+                ).show()
+            }) {
             Row {
-                Icon(imageVector = Icons.Default.DateRange, contentDescription = "Date range")
+                Column {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Date range",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.width(5.dp))
-                val day = dayState.value.text
-                if (day == "")
-                    Text(text = "Select date");
-                else
-                    Text(
-                        text = "${dayOfWeekState.value.text} ${dayState.value.text}" +
-                                "/${monthState.value.text}" +
-                        "/${yearState.value.text}")
+                Column {
+
+                    val day = dayState.value.text
+
+                    if (day == "") {
+                        // Get the current date.
+                        val calendar = Calendar.getInstance()
+
+                        // Get the current year.
+                        val currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+
+                        // Get the current year.
+                        val currentMonth = calendar.get(Calendar.MONTH)
+
+                        // Get the current year.
+                        val currentYear = calendar.get(Calendar.YEAR)
+
+                        val weekDay = getDayOfWeek(
+                            "$currentDayOfMonth/${currentMonth + 1}/$currentYear"
+                        )
+
+                        Text(
+                            text = "Select date",
+                            fontSize = 15.sp
+                        )
+                        Text(
+                            text = "default $weekDay $currentDayOfMonth" +
+                                    "/$currentMonth" + "/$currentMonth",
+                            fontSize = 15.sp
+                        )
+                    } else {
+                        Text(
+                            text = "Selected",
+                            fontSize = 15.sp
+                        )
+                        Text(
+                            text = "${dayOfWeekState.value.text} ${dayState.value.text}" +
+                                    "/${monthState.value.text}" +
+                                    "/${yearState.value.text}",
+                            fontSize = 15.sp
+                        )
+                    }
+                }
             }
         }
 

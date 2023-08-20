@@ -39,7 +39,9 @@ import com.example.moneytracker.pages.scaffold.ScaffoldComponent
 @Composable
 fun MonthPage(year: String, navController: NavHostController, incomeViewModel: IncomeViewModel) {
     // Show dialog state
-    val showDialog = remember { mutableStateOf(false) }
+    val showIncomeDialog = remember { mutableStateOf(false) }
+    val showDebtDialog = remember { mutableStateOf(false) }
+    val showExpenseDialog = remember { mutableStateOf(false) }
 
     // Get the live added month
     incomeViewModel.getMonth(year)
@@ -47,7 +49,9 @@ fun MonthPage(year: String, navController: NavHostController, incomeViewModel: I
 
     // Scaffold Component
     ScaffoldComponent(
-        showDialog = showDialog,
+        showIncomeDialog = showIncomeDialog,
+        showDebtDialog = showDebtDialog,
+        showExpenseDialog = showExpenseDialog,
         incomeViewModel = incomeViewModel
     ) {
         ScaffoldMonthPageContents(

@@ -45,14 +45,17 @@ import com.example.moneytracker.charts.DonutChartInput
 import com.example.moneytracker.charts.DonutPieChart
 import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
-import com.example.moneytracker.statistic.TotalSumViewer
+import com.example.moneytracker.pages.scaffold.ScaffoldDataClass
+import com.example.moneytracker.statistic.CurrentDateStats
 import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainPage(navController: NavHostController, incomeViewModel: IncomeViewModel) {
-    val showDialog = remember { mutableStateOf(false) }
+    val showIncomeDialog = remember { mutableStateOf(false) }
+    val showDebtDialog = remember { mutableStateOf(false) }
+    val showExpenseDialog = remember { mutableStateOf(false) }
 
 
     // Get the unique years
@@ -63,7 +66,9 @@ fun MainPage(navController: NavHostController, incomeViewModel: IncomeViewModel)
 
     // Scaffold Component
     ScaffoldComponent(
-        showDialog = showDialog,
+        showIncomeDialog = showIncomeDialog,
+        showDebtDialog = showDebtDialog,
+        showExpenseDialog = showExpenseDialog,
         incomeViewModel = incomeViewModel
     ) {
         ScaffoldMainPageContents(
@@ -81,6 +86,7 @@ fun ScaffoldMainPageContents(
     incomeViewModel: IncomeViewModel
 ) {
 
+    val color = ScaffoldDataClass()
 
     Column(
         modifier = Modifier
@@ -114,11 +120,13 @@ fun ScaffoldMainPageContents(
             // Get the current year.
             val currentYear = calendar.get(Calendar.YEAR)
 
-            val weekDay = getDayOfWeek("$currentDayOfMonth/${currentMonth + 1}/$currentYear")
+            val weekDay = getDayOfWeek(
+                "$currentDayOfMonth/${currentMonth + 1}/$currentYear"
+            )
 
             Column(
                 modifier = Modifier.fillMaxSize()
-            ){
+            ) {
 
                 /*
                     Day Container
@@ -142,13 +150,13 @@ fun ScaffoldMainPageContents(
                             )
 
                             Text(
-                                text = "$weekDay",
+                                text = weekDay,
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 17.sp,
                                 modifier = Modifier.padding(top = 0.1.dp),
 
-                            )
+                                )
 
 
                             if (currentDayOfMonth < 10) {
@@ -181,8 +189,8 @@ fun ScaffoldMainPageContents(
                             .liveEarnedADay.observeAsState(0.0).value
 
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
-                            DonutChartInput(currentEarningADay?:0.0, Color(76, 175, 80, 255)),
-                            DonutChartInput(50.0, Color(223, 7, 56, 255))
+                            DonutChartInput(currentEarningADay ?: 0.0, color.incomeColor),
+                            DonutChartInput(50.0, color.expenseColor)
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
@@ -200,7 +208,7 @@ fun ScaffoldMainPageContents(
                         .liveEarnedADay.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    TotalSumViewer(income = currentEarningADay, expense = 0.0)
+                    CurrentDateStats(income = currentEarningADay, expense = 0.0)
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -245,8 +253,8 @@ fun ScaffoldMainPageContents(
                             .liveEarnedAMonth.observeAsState(0.0).value
 
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
-                            DonutChartInput(currentEarningAMonth?:0.0, Color(76, 175, 80, 255)),
-                            DonutChartInput(50.0, Color(223, 7, 56, 255))
+                            DonutChartInput(currentEarningAMonth ?: 0.0, color.incomeColor),
+                            DonutChartInput(0.0, color.expenseColor)
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
@@ -263,7 +271,7 @@ fun ScaffoldMainPageContents(
                         .liveEarnedAMonth.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    TotalSumViewer(income = currentEarningAMonth, expense = 0.0)
+                    CurrentDateStats(income = currentEarningAMonth, expense = 0.0)
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -358,7 +366,7 @@ fun ScaffoldMainPageContents(
                         .liveEarnedAYear.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    TotalSumViewer(income = currentEarningAYear, expense = 0.0)
+                    CurrentDateStats(income = currentEarningAYear, expense = 0.0)
                 }
 
             }

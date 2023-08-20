@@ -35,8 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.example.moneytracker.R
-import com.example.moneytracker.alert.ShowAlertDialogWithTextField
+import com.example.moneytracker.alert.ShowDebtAlertDialog
+import com.example.moneytracker.alert.ShowExpenseAlertDialog
+import com.example.moneytracker.alert.ShowIncomeAlertDialog
 import com.example.moneytracker.modelDrawer.ModelDrawerContents
 import com.example.moneytracker.models.income.IncomeViewModel
 
@@ -45,7 +46,9 @@ import com.example.moneytracker.models.income.IncomeViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ScaffoldComponent(
-    showDialog: MutableState<Boolean>,
+    showIncomeDialog: MutableState<Boolean>,
+    showDebtDialog: MutableState<Boolean>,
+    showExpenseDialog: MutableState<Boolean>,
     incomeViewModel: IncomeViewModel,
     scaffoldContents: @Composable () -> Unit
 ) {
@@ -56,6 +59,9 @@ fun ScaffoldComponent(
     val dayState = remember { mutableStateOf(TextFieldValue()) }
     val monthState = remember { mutableStateOf(TextFieldValue()) }
     val yearState = remember { mutableStateOf(TextFieldValue()) }
+
+    // stats data class
+    val scaffoldDataClass = ScaffoldDataClass()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -76,60 +82,83 @@ fun ScaffoldComponent(
                 if (isExpanded) {
 
                     FloatActionButton(
-                        containerColor = Color(255, 73, 158),
+                        containerColor = scaffoldDataClass.debtsColor,
                         text = "Debts",
                         icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.borrow),
-                                contentDescription = "Add Dialog",
-                                modifier = Modifier.size(24.dp)
-                            )
+                            (if (showDebtDialog.value) {
+                                scaffoldDataClass.debtsIcon["opened"]
+                            } else {
+                                scaffoldDataClass.debtsIcon["closed"]
+                            })?.let { painterResource(id = it) }?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = "Add Dialog",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
                     ) {
-                        isBottomSheetOpen.value = true
+                        showDebtDialog.value = true
                     }
 
                     Spacer(modifier = Modifier.height(7.dp))
 
                     FloatActionButton(
-                        containerColor = Color(53, 206, 141),
+                        containerColor = scaffoldDataClass.incomeColor,
                         text = "Income",
                         icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.income),
-                                contentDescription = "Add Dialog",
-                                modifier = Modifier.size(24.dp)
-                            )
+                            (if (showIncomeDialog.value) {
+                                scaffoldDataClass.incomeIcon["opened"]
+                            } else {
+                                scaffoldDataClass.incomeIcon["closed"]
+                            })?.let { painterResource(id = it) }?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = "Add Dialog",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
                     ) {
                         // OnClick listener
-                        showDialog.value = true
+                        showIncomeDialog.value = true
 
                     }
 
                     Spacer(modifier = Modifier.height(7.dp))
 
                     FloatActionButton(
-                        containerColor = Color(240, 15, 6, 94),
+                        containerColor = scaffoldDataClass.expenseColor,
                         text = "Expense",
                         icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.expenses),
-                                contentDescription = "Add Dialog",
-                                modifier = Modifier.size(24.dp)
-                            )
+                            (if (showExpenseDialog.value) {
+                                scaffoldDataClass.expenseIcon["opened"]
+                            } else {
+                                scaffoldDataClass.expenseIcon["closed"]
+                            })?.let { painterResource(id = it) }?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = "Add Dialog",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
                     ) {
 
                         // OnClick listener
-
+                        showExpenseDialog.value = true
                     }
 
                     Spacer(modifier = Modifier.height(7.dp))
                 }
 
-
+                val expendBtnColor = if (isExpanded) {
+                    Color(22, 123, 202, 255)
+                } else {
+                    Color(22, 123, 202, 128)
+                }
                 FloatActionButton(
+                    containerColor = expendBtnColor,
                     icon = {
                         if (isExpanded)
                             Icon(
@@ -153,8 +182,28 @@ fun ScaffoldComponent(
         scaffoldContents()
     }
 
-    ShowAlertDialogWithTextField(
-        showDialog,
+    ShowIncomeAlertDialog(
+        showIncomeDialog,
+        earnedState = earnedState,
+        dayOfWeekState = dayOfWeekState,
+        dayState = dayState,
+        monthState = monthState,
+        yearState = yearState,
+        incomeViewModel = incomeViewModel
+    )
+
+    ShowDebtAlertDialog(
+        showDebtDialog,
+        earnedState = earnedState,
+        dayOfWeekState = dayOfWeekState,
+        dayState = dayState,
+        monthState = monthState,
+        yearState = yearState,
+        incomeViewModel = incomeViewModel
+    )
+
+    ShowExpenseAlertDialog(
+        showExpenseDialog,
         earnedState = earnedState,
         dayOfWeekState = dayOfWeekState,
         dayState = dayState,
