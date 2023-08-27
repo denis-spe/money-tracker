@@ -53,9 +53,7 @@ import java.util.Calendar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainPage(navController: NavHostController, incomeViewModel: IncomeViewModel) {
-    val showIncomeDialog = remember { mutableStateOf(false) }
-    val showDebtDialog = remember { mutableStateOf(false) }
-    val showExpenseDialog = remember { mutableStateOf(false) }
+
 
 
     // Get the unique years
@@ -66,9 +64,6 @@ fun MainPage(navController: NavHostController, incomeViewModel: IncomeViewModel)
 
     // Scaffold Component
     ScaffoldComponent(
-        showIncomeDialog = showIncomeDialog,
-        showDebtDialog = showDebtDialog,
-        showExpenseDialog = showExpenseDialog,
         incomeViewModel = incomeViewModel
     ) {
         ScaffoldMainPageContents(

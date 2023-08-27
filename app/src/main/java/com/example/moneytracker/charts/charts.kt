@@ -20,6 +20,7 @@ fun DonutPieChart(
         onDraw = {
             val center = Offset(size.width / 2, size.height / 2)
             val radius = size.minDimension / 2 - strokeWidth / 2
+            val separationAngle = 10f
 
             var startAngle = -90f // Starting from the top
             var index = 0
@@ -28,8 +29,8 @@ fun DonutPieChart(
                 val sweepAngle = 360 * (donutChartInput.value / totalSum)
                 drawArc(
                     color = donutChartInput.color,// colors[index % colors.size],
-                    startAngle = startAngle,
-                    sweepAngle = sweepAngle.toFloat(),
+                    startAngle = startAngle - separationAngle / 2,
+                    sweepAngle = sweepAngle.toFloat() - separationAngle / 2,
                     topLeft = center - Offset(radius, radius),
                     size = Size(radius * 2, radius * 2),
                     useCenter = false,
