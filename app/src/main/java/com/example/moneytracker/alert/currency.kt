@@ -1,5 +1,8 @@
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,7 +25,11 @@ fun CurrencySymbolByLocation() {
     val currencySymbol = currency.symbol
 
     // Now you can use the currency symbol in your UI
-    Text(text = currencySymbol, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+    Text(text = currencySymbol,
+        fontSize = 25.sp, fontWeight = FontWeight.Bold,
+        color = if (isSystemInDarkTheme()) Color.White
+                else Color(71, 69, 69, 255)
+    )
 }
 
 fun formatMoney(input: String): String {

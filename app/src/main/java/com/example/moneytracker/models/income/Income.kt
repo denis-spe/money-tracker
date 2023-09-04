@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "Income")
 data class Income (
     @PrimaryKey(autoGenerate = true)
-    val income_id: Int = 0,
+    val incomeId: Int = 0,
     @ColumnInfo
     val dayOfWeek: String,
     @ColumnInfo

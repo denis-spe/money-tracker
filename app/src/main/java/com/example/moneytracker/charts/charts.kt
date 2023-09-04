@@ -20,7 +20,7 @@ fun DonutPieChart(
         onDraw = {
             val center = Offset(size.width / 2, size.height / 2)
             val radius = size.minDimension / 2 - strokeWidth / 2
-            val separationAngle = 10f
+            val separationAngle = 4f
 
             var startAngle = -90f // Starting from the top
             var index = 0

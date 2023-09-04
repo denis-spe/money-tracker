@@ -39,6 +39,7 @@ import com.example.moneytracker.alert.debtsDialog.ShowDebtAlertDialog
 import com.example.moneytracker.alert.expenseDialog.ShowExpenseAlertDialog
 import com.example.moneytracker.alert.lendDialog.ShowLendAlertDialog
 import com.example.moneytracker.modelDrawer.ModelDrawerContents
+import com.example.moneytracker.models.expense.ExpenseViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -47,6 +48,7 @@ import com.example.moneytracker.models.income.IncomeViewModel
 @Composable
 fun ScaffoldComponent(
     incomeViewModel: IncomeViewModel,
+    expenseViewModel: ExpenseViewModel,
     scaffoldContents: @Composable () -> Unit
 ) {
 
@@ -271,7 +273,7 @@ fun ScaffoldComponent(
         dayState = dayState,
         monthState = monthState,
         yearState = yearState,
-        incomeViewModel = incomeViewModel
+        expenseViewModel = expenseViewModel
     )
 
     ModelDrawerContents(

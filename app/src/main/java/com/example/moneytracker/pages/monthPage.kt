@@ -32,12 +32,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.moneytracker.models.expense.ExpenseViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MonthPage(year: String, navController: NavHostController, incomeViewModel: IncomeViewModel) {
+fun MonthPage(
+    year: String, navController: NavHostController,
+    incomeViewModel: IncomeViewModel,
+    expenseViewModel: ExpenseViewModel
+) {
 
     // Get the live added month
     incomeViewModel.getMonth(year)
@@ -45,7 +50,8 @@ fun MonthPage(year: String, navController: NavHostController, incomeViewModel: I
 
     // Scaffold Component
     ScaffoldComponent(
-        incomeViewModel = incomeViewModel
+        incomeViewModel = incomeViewModel,
+        expenseViewModel = expenseViewModel
     ) {
         ScaffoldMonthPageContents(
             year,

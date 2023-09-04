@@ -1,6 +1,8 @@
 package com.example.moneytracker.alert
 
 import CurrencySymbolByLocation
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -13,12 +15,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun AmountTextField(
@@ -31,23 +35,16 @@ fun AmountTextField(
             state.value = newValue
         },
         label = { Text(text = label) },
-        modifier = Modifier.padding(16.dp),
-        placeholder = { Text(text = placeholder) },
+        placeholder = { Text(text = placeholder, fontSize = 20.sp) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         leadingIcon = {
             CurrencySymbolByLocation()
         },
+        textStyle = TextStyle(fontSize = 20.sp)
 
-        visualTransformation = PasswordVisualTransformation()
     )
-}
-
-@Composable
-fun PasswordVisualTransformation(): VisualTransformation {
-    return VisualTransformation { textSnapshot ->
-        TransformedText(textSnapshot, offsetMapping = OffsetMapping.Identity)
-    }
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 
@@ -62,11 +59,12 @@ fun DescriptionTextField(
             state.value = newValue
         },
         label = { Text(text = "Description") },
-        modifier = Modifier.padding(16.dp),
-        placeholder = { Text(text = placeholder) },
+        placeholder = { Text(text = placeholder, fontSize = 20.sp) },
         singleLine = true,
         leadingIcon = {
             Icon(imageVector = Icons.Outlined.Info, contentDescription = "description")
-        }
+        },
+        textStyle = TextStyle(fontSize = 20.sp)
     )
+    Spacer(modifier = Modifier.height(16.dp))
 }

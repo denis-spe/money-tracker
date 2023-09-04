@@ -8,21 +8,11 @@ import androidx.room.PrimaryKey
 import com.example.moneytracker.models.income.Income
 
 @Entity(
-    tableName = "Expense",
-    foreignKeys = [
-        ForeignKey(
-            entity = Income::class,
-            parentColumns = ["income_id"],
-            childColumns = ["income_id"],
-            onDelete = ForeignKey.CASCADE,
-        )
-    ]
+    tableName = "Expense"
 )
 data class Expense(
-    @PrimaryKey
-    var expense_id: Int,
-    @ColumnInfo
-    var income_id: Int,
+    @PrimaryKey(autoGenerate = true)
+    var expenseId: Int = 0,
     @ColumnInfo
     val dayOfWeek: String,
     @ColumnInfo

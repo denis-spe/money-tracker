@@ -9,8 +9,8 @@ import com.example.moneytracker.models.income.Income
 
 @Dao
 interface ExpenseDao {
-    @Query("SELECT * FROM Income")
-    fun getAllEarned(): LiveData<List<Income>>
+    @Query("SELECT * FROM Expense")
+    fun getAllEarned(): LiveData<List<Expense>>
 
     @Query("SELECT DISTINCT month FROM Expense WHERE year = :year")
     fun getMonth(year: String): LiveData<List<String>>
@@ -37,8 +37,8 @@ interface ExpenseDao {
     fun totalEarnedADay(day: String, month: String, year: String): LiveData<Double>
 
     @Insert
-    fun insertUser(expense: Expense)
+    fun insertExpense(expense: Expense)
 
     @Delete
-    fun deleteUser(expense: Expense)
+    fun deleteExpense(expense: Expense)
 }

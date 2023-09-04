@@ -39,49 +39,45 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.moneytracker.alert.getDayOfWeek
-import com.example.moneytracker.alert.getMonthName
 import com.example.moneytracker.charts.DonutChartInput
 import com.example.moneytracker.charts.DonutPieChart
+import com.example.moneytracker.date.getCurrentDate
+import com.example.moneytracker.models.expense.ExpenseViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
 import com.example.moneytracker.pages.scaffold.ScaffoldDataClass
 import com.example.moneytracker.statistic.CurrentDateStats
-import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainPage(navController: NavHostController, incomeViewModel: IncomeViewModel) {
-
-
-
-    // Get the unique years
-    incomeViewModel.getUniqueYear()
-
-    // load the live updated data
-    val earnings: List<String> by incomeViewModel.liveStringData.observeAsState(emptyList())
+fun MainPage(
+    navController: NavHostController,
+    incomeViewModel: IncomeViewModel,
+    expenseViewModel: ExpenseViewModel
+) {
 
     // Scaffold Component
     ScaffoldComponent(
-        incomeViewModel = incomeViewModel
+        incomeViewModel = incomeViewModel,
+        expenseViewModel = expenseViewModel
     ) {
-        ScaffoldMainPageContents(
+        MainPageContents(
             navController,
-            earnings = earnings,
-            incomeViewModel = incomeViewModel
+            incomeViewModel = incomeViewModel,
+            expenseViewModel = expenseViewModel
         )
     }
 }
 
 @Composable
-fun ScaffoldMainPageContents(
+fun MainPageContents(
     navController: NavController,
-    earnings: List<String>,
-    incomeViewModel: IncomeViewModel
+    incomeViewModel: IncomeViewModel,
+    expenseViewModel: ExpenseViewModel
 ) {
 
-    val color = ScaffoldDataClass()
+    val scaffoldDataClass = ScaffoldDataClass()
 
     Column(
         modifier = Modifier
@@ -104,20 +100,20 @@ fun ScaffoldMainPageContents(
 
 
             // Get the current date.
-            val calendar = Calendar.getInstance()
+            val calendar = getCurrentDate()
 
             // Get the current year.
-            val currentDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            val currentDayOfMonth = calendar["dayOfMonth"]
 
             // Get the current year.
-            val currentMonth = calendar.get(Calendar.MONTH)
+            val currentMonth = calendar["month"]
 
             // Get the current year.
-            val currentYear = calendar.get(Calendar.YEAR)
+            val currentYear = calendar["year"]
 
-            val weekDay = getDayOfWeek(
-                "$currentDayOfMonth/${currentMonth + 1}/$currentYear"
-            )
+            val weekDay: String? = calendar["dayOfWeek"]
+
+
 
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -145,7 +141,7 @@ fun ScaffoldMainPageContents(
                             )
 
                             Text(
-                                text = weekDay,
+                                text = weekDay ?: "",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 17.sp,
@@ -154,56 +150,74 @@ fun ScaffoldMainPageContents(
                                 )
 
 
-                            if (currentDayOfMonth < 10) {
-                                Text(
-                                    text = "0$currentDayOfMonth",
-                                    fontWeight = FontWeight(600),
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    fontSize = 17.sp
-                                )
-                            }
-                            else
-                                Text(
-                                    text = "$currentDayOfMonth",
-                                    fontWeight = FontWeight(600),
-                                    color = MaterialTheme.colorScheme.onBackground,
-                                    fontSize = 17.sp
-                                )
+
+                            Text(
+                                text = (
+                                        if (currentDayOfMonth?.length!! > 1) "$currentDayOfMonth"
+                                        else "0$currentDayOfMonth"),
+                                fontWeight = FontWeight(600),
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontSize = 17.sp
+                            )
                         }
                     },
                     secondPart = {
                         // fetch the live data
                         incomeViewModel.getTotalEarnedADay(
                             currentDayOfMonth.toString(),
-                            getMonthName(currentMonth),
+                            currentMonth?:"",
+                            currentYear.toString()
+                        )
+                        expenseViewModel.getTotalExpenseADay(
+                            currentDayOfMonth.toString(),
+                            currentMonth?:"",
                             currentYear.toString()
                         )
 
                         // Get list of earning in a day
                         val currentEarningADay: Double? = incomeViewModel
                             .liveEarnedADay.observeAsState(0.0).value
+                        // Get list of expense in a day
+                        val currentExpenseADay: Double? = expenseViewModel
+                            .liveExpenseADay.observeAsState(0.0).value
 
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
-                            DonutChartInput(currentEarningADay ?: 0.0, color.incomeColor),
-                            DonutChartInput(50.0, color.expenseColor)
+                            DonutChartInput(
+                                currentEarningADay ?: 0.0,
+                                scaffoldDataClass.incomeColor),
+                            DonutChartInput(
+                                currentExpenseADay ?: 0.0,
+                                scaffoldDataClass.expenseColor)
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
                     }
                 ) {
                     // fetch the live data
-                    incomeViewModel.getTotalEarnedADay(
-                        currentDayOfMonth.toString(),
-                        getMonthName(currentMonth),
-                        currentYear.toString()
-                    )
+                    if (currentMonth != null) {
+                        incomeViewModel.getTotalEarnedADay(
+                            currentDayOfMonth.toString(),
+                            currentMonth,
+                            currentYear.toString()
+                        )
+
+                        expenseViewModel.getTotalExpenseADay(
+                            currentDayOfMonth.toString(),
+                            currentMonth?:"",
+                            currentYear.toString()
+                        )
+                    }
 
                     // Get list of earning in a day
                     val currentEarningADay: Double? = incomeViewModel
                         .liveEarnedADay.observeAsState(0.0).value
 
+                    // Get list of expense in a day
+                    val currentExpenseADay: Double? = expenseViewModel
+                        .liveExpenseADay.observeAsState(0.0).value
+
                     Spacer(modifier = Modifier.height(5.dp))
-                    CurrentDateStats(income = currentEarningADay, expense = 0.0)
+                    CurrentDateStats(income = currentEarningADay, expense = currentExpenseADay)
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -228,7 +242,7 @@ fun ScaffoldMainPageContents(
                                 fontSize = 20.sp
                             )
                             Text(
-                                text = getMonthName(currentMonth),
+                                text = currentMonth?:"",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
                                 fontSize = 17.sp
@@ -238,35 +252,60 @@ fun ScaffoldMainPageContents(
                     secondPart = {
 
                         // fetch the live data
-                        incomeViewModel.getTotalEarnedAMonth(
-                            getMonthName(currentMonth),
-                            currentYear.toString()
-                        )
+                        if (currentMonth != null) {
+                            incomeViewModel.getTotalEarnedAMonth(
+                                currentMonth,
+                                currentYear.toString()
+                            )
+
+                            expenseViewModel.getTotalExpenseAMonth(
+                                currentMonth,
+                                currentYear.toString()
+                            )
+                        }
 
                         // Get list of earning in a Month
                         val currentEarningAMonth: Double? = incomeViewModel
                             .liveEarnedAMonth.observeAsState(0.0).value
 
+                        // Get list of expense in a Month
+                        val currentExpenseAMonth: Double? = expenseViewModel
+                            .liveExpenseAMonth.observeAsState(0.0).value
+
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
-                            DonutChartInput(currentEarningAMonth ?: 0.0, color.incomeColor),
-                            DonutChartInput(0.0, color.expenseColor)
+                            DonutChartInput(
+                                currentEarningAMonth ?: 0.0,
+                                scaffoldDataClass.incomeColor),
+                            DonutChartInput(
+                                currentExpenseAMonth ?: 0.0,
+                                scaffoldDataClass.expenseColor)
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
                     }
                 ) {
                     // fetch the live data
-                    incomeViewModel.getTotalEarnedAMonth(
-                        getMonthName(currentMonth),
-                        currentYear.toString()
-                    )
+                    if (currentMonth != null) {
+                        incomeViewModel.getTotalEarnedAMonth(
+                            currentMonth,
+                            currentYear.toString()
+                        )
+                        expenseViewModel.getTotalExpenseAMonth(
+                            currentMonth,
+                            currentYear.toString()
+                        )
+                    }
 
                     // Get list of earning in a Month
                     val currentEarningAMonth: Double? = incomeViewModel
                         .liveEarnedAMonth.observeAsState(0.0).value
 
+                    // Get list of expense in a Month
+                    val currentExpenseAMonth: Double? = expenseViewModel
+                        .liveExpenseAMonth.observeAsState(0.0).value
+
                     Spacer(modifier = Modifier.height(5.dp))
-                    CurrentDateStats(income = currentEarningAMonth, expense = 0.0)
+                    CurrentDateStats(income = currentEarningAMonth, expense = currentExpenseAMonth)
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -340,14 +379,23 @@ fun ScaffoldMainPageContents(
 
                         // fetch the live data
                         incomeViewModel.getTotalEarnedAYear(currentYear.toString())
+                        expenseViewModel.getTotalExpenseAYear(currentYear.toString())
 
                         // Get list of earning in a year
                         val currentEarningAYear: Double? = incomeViewModel
                             .liveEarnedAYear.observeAsState(0.0).value
 
+                        // Get list of expense in a year
+                        val currentExpenseAYear: Double? = expenseViewModel
+                            .liveExpenseAYear.observeAsState(0.0).value
+
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
-                            DonutChartInput(currentEarningAYear?:0.0, Color(76, 175, 80, 255)),
-                            DonutChartInput(50.0, Color(223, 7, 56, 255))
+                            DonutChartInput(
+                                currentEarningAYear?:0.0,
+                                scaffoldDataClass.incomeColor),
+                            DonutChartInput(
+                                currentExpenseAYear ?: 0.0,
+                                scaffoldDataClass.expenseColor)
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
@@ -355,13 +403,18 @@ fun ScaffoldMainPageContents(
                 ) {
                     // fetch the live data
                     incomeViewModel.getTotalEarnedAYear(currentYear.toString())
+                    expenseViewModel.getTotalExpenseAYear(currentYear.toString())
+
 
                     // Get list of earning in a year
                     val currentEarningAYear: Double? = incomeViewModel
                         .liveEarnedAYear.observeAsState(0.0).value
+                    // Get list of expense in a year
+                    val currentExpenseAYear: Double? = expenseViewModel
+                        .liveExpenseAYear.observeAsState(0.0).value
 
                     Spacer(modifier = Modifier.height(5.dp))
-                    CurrentDateStats(income = currentEarningAYear, expense = 0.0)
+                    CurrentDateStats(income = currentEarningAYear, expense = currentExpenseAYear)
                 }
 
             }
