@@ -1,8 +1,6 @@
 package com.example.moneytracker.models.expense
 
 import androidx.lifecycle.LiveData
-import com.example.moneytracker.models.income.IncomeDao
-import com.example.moneytracker.models.income.Income
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -49,13 +47,15 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         month: String,
         year: String,
         expense: Double,
+        description: String,
     ){
         val expense = Expense(
             dayOfWeek = dayOfWeek,
             day = day,
             month = month,
             year = year,
-            expense = expense
+            expense = expense,
+            description = description
         )
         withContext(Dispatchers.IO) {
             expenseDao.insertExpense(expense)

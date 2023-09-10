@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moneytracker.models.income.Income
-import com.example.moneytracker.models.income.IncomeRepository
 import kotlinx.coroutines.launch
 
 class IncomeViewModel(private val incomeRepository: IncomeRepository,
@@ -98,17 +96,21 @@ class IncomeViewModel(private val incomeRepository: IncomeRepository,
     }
 
     // Other ViewModel methods...
-    fun insertUser(dayOfWeek: String,
-                   day: String,
-                   month: String,
-                   year: String,
-                   earned: Double) {
+    fun insertUser(
+        dayOfWeek: String,
+        day: String,
+        month: String,
+        year: String,
+        earned: Double,
+        description: String
+    ) {
         viewModelScope.launch {
-            incomeRepository.insertUser(
+            incomeRepository.insertData(
                 dayOfWeek = dayOfWeek,
                 day = day,
                 month = month,
                 year = year,
+                description=description,
                 earned)
         }
     }

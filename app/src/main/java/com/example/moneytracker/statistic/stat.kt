@@ -66,7 +66,7 @@ fun CurrentDateStats(
                 val scaledIncome = bigDecimal.setScale(2, RoundingMode.UP)
 
                 Text(
-                    text = shortenNumber(scaledIncome.toLong()),
+                    text = shortenNumber(scaledIncome),
                     color = color.incomeColor,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
@@ -87,7 +87,8 @@ fun CurrentDateStats(
                 val scaledExpense = bigDecimal.setScale(2, RoundingMode.UP)
 
                 Text(
-                    text = shortenNumber(scaledExpense.toLong()),
+                    text = if (income == null) "-${shortenNumber(scaledExpense)}"
+                           else shortenNumber(scaledExpense),
                     color = color.expenseColor,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
@@ -101,20 +102,54 @@ fun CurrentDateStats(
                 )
             }
 
-            if (income != null) {
+            if (income != null && expense != null) {
+                val amount = (income - expense)
+                // Rounding the amount
+                val bigDecimal = BigDecimal(amount)
+                val scaledAmount = bigDecimal.setScale(2, RoundingMode.UP)
+
+                if (amount > 0.0){
+                    Text(
+                        text = shortenNumber(scaledAmount),
+                        color = color.incomeColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else if(amount == 0.0){
+                    Text(
+                        text = shortenNumber(scaledAmount),
+                        color = color.remainderColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                } else{
+                    Text(
+                        text = shortenNumber(scaledAmount),
+                        color = color.expenseColor,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            } else if (
+                expense != null) {
+                // Rounding the amount
+                val bigDecimal = BigDecimal(expense)
+                val scaledExpense = bigDecimal.setScale(2, RoundingMode.UP)
+
                 Text(
-                    text = shortenNumber((income - expense!!).toLong()),
-                    color = color.remainderColor,
+                    text = "-${shortenNumber(scaledExpense)}",
+                    color = color.expenseColor,
                     fontWeight = FontWeight.Bold
                 )
             } else if (
-                expense != null) {
+                income != null) {
+                // Rounding the amount
+                val bigDecimal = BigDecimal(income)
+                val scaledIncome = bigDecimal.setScale(2, RoundingMode.UP)
+
                 Text(
-                    text = shortenNumber(expense.toLong()),
-                    color = color.remainderColor,
+                    text = shortenNumber(scaledIncome),
+                    color = color.incomeColor,
                     fontWeight = FontWeight.Bold
                 )
-            } else {
+            }else {
                 Text(
                     text = "0,0",
                     color = color.remainderColor,
@@ -126,7 +161,7 @@ fun CurrentDateStats(
 }
 
 
-fun shortenNumber(number: Long): String {
+fun shortenNumber(number: BigDecimal): String {
     val suffixes = arrayOf("", "K", "M", "B", "T") // Add more suffixes as needed
     var index = 0
     var num = number.toDouble()
@@ -136,5 +171,5 @@ fun shortenNumber(number: Long): String {
         index++
     }
 
-    return "%.1f%s".format(num, suffixes[index])
+    return "%.2f%s".format(num, suffixes[index])
 }

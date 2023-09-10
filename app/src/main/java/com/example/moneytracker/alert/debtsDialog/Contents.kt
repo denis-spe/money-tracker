@@ -4,33 +4,20 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.moneytracker.alert.AmountTextField
 import com.example.moneytracker.alert.DescriptionTextField
 import com.example.moneytracker.alert.DialogDataClass
 import com.example.moneytracker.date.ClickableDateText
-import com.example.moneytracker.date.calenderContent
-import com.example.moneytracker.date.getDayOfWeek
 import com.example.moneytracker.models.income.IncomeViewModel
-import java.util.Calendar
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,6 +104,7 @@ fun ShowDebtAlertDialog(
                             val day = dayState.value.text
                             val month = monthState.value.text
                             val year = yearState.value.text
+                            val description = debtDescState.value.text
 
                             if (earned != "" && dayOfWeek != "") {
                                 // Example usage: Insert user
@@ -125,7 +113,8 @@ fun ShowDebtAlertDialog(
                                     day = day,
                                     month = month,
                                     year = year,
-                                    earned = earned.toDouble()
+                                    earned = earned.toDouble(),
+                                    description = description
                                 )
                                 debtState.value = TextFieldValue("")
                                 dayOfWeekState.value = TextFieldValue("")

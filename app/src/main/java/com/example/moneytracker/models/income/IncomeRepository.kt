@@ -1,8 +1,6 @@
 package com.example.moneytracker.models.income
 
 import androidx.lifecycle.LiveData
-import com.example.moneytracker.models.income.IncomeDao
-import com.example.moneytracker.models.income.Income
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -43,16 +41,18 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         return incomeDao.getUniqueYear()
     }
 
-    suspend fun insertUser(dayOfWeek: String,
+    suspend fun insertData(dayOfWeek: String,
                            day: String,
                            month: String,
                            year: String,
+                           description: String,
                            earned: Double){
         val user = Income(
             dayOfWeek = dayOfWeek,
             day = day,
             month = month,
             year = year,
+            description = description,
             earned = earned
         )
         withContext(Dispatchers.IO) {

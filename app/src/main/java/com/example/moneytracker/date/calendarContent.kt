@@ -181,7 +181,6 @@ fun ClickableDateText(
                 val day = dayState.value.text
 
                 if (day == "") {
-                    val mCalendar = Calendar.getInstance()
 
                     // Get the current date: currentDate
                     val currentDate: Map<String, String> = getCurrentDate()
@@ -196,10 +195,15 @@ fun ClickableDateText(
                         fontSize = 18.sp
                     )
                 } else {
+                    val day = dayState.value.text
+                    val dayOfWeek = dayOfWeekState.value.text
+                    val month = monthState.value.text
+                    val year = yearState.value.text
+
                     Text(
-                        text = "${dayOfWeekState.value.text}, ${dayState.value.text}" +
-                                " ${monthState.value.text}" +
-                                " ${yearState.value.text}",
+                        text = "$dayOfWeek, ${
+                            if(day.length > 1) day else "0$day"
+                        }" + " $month" + " $year",
                         fontSize = 18.sp
                     )
                 }

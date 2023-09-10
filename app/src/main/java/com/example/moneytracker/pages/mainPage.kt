@@ -184,10 +184,12 @@ fun MainPageContents(
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
                             DonutChartInput(
                                 currentEarningADay ?: 0.0,
-                                scaffoldDataClass.incomeColor),
+                                scaffoldDataClass.incomeColor
+                            ),
                             DonutChartInput(
                                 currentExpenseADay ?: 0.0,
-                                scaffoldDataClass.expenseColor)
+                                scaffoldDataClass.expenseColor
+                            )
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
@@ -203,7 +205,7 @@ fun MainPageContents(
 
                         expenseViewModel.getTotalExpenseADay(
                             currentDayOfMonth.toString(),
-                            currentMonth?:"",
+                            currentMonth,
                             currentYear.toString()
                         )
                     }

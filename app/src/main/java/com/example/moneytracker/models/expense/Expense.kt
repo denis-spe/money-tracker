@@ -22,6 +22,8 @@ data class Expense(
     @ColumnInfo
     val year: String,
     @ColumnInfo
-    var expense: Double
+    var expense: Double,
+    @ColumnInfo
+    var description: String
 
 )

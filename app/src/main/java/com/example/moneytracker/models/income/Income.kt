@@ -18,5 +18,7 @@ data class Income (
     @ColumnInfo
     val year: String,
     @ColumnInfo
+    val description: String,
+    @ColumnInfo
     val earned: Double
 )
