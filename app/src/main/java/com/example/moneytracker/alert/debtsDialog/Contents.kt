@@ -94,26 +94,30 @@ fun ShowDebtAlertDialog(
                     )
                 },
                 confirmButton = {
+                    var bothAreFielded = debtState.value.text.isNotEmpty() &&
+                            debtDescState.value.text.isNotEmpty()
+
                     Button(
                         colors = dialogDataClass.addButtonColor,
                         shape = dialogDataClass.buttonShape,
+                        enabled = bothAreFielded,
                         onClick = {
                             // Retrieve the entered text
-                            val earned = debtState.value.text
+                            val debt = debtState.value.text.replace(" ", "")
                             val dayOfWeek = dayOfWeekState.value.text
                             val day = dayState.value.text
                             val month = monthState.value.text
                             val year = yearState.value.text
                             val description = debtDescState.value.text
 
-                            if (earned != "" && dayOfWeek != "") {
+                            if (debt != "" && dayOfWeek != "") {
                                 // Example usage: Insert user
                                 incomeViewModel.insertUser(
                                     dayOfWeek = dayOfWeek,
                                     day = day,
                                     month = month,
                                     year = year,
-                                    earned = earned.toDouble(),
+                                    earned = debt.toDouble(),
                                     description = description
                                 )
                                 debtState.value = TextFieldValue("")

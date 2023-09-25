@@ -10,8 +10,8 @@ data class DialogDataClass(
     val addButtonColor: ButtonColors = ButtonColors(
         containerColor = Color(76, 175, 80, 255),
         contentColor = Color.White,
-        disabledContainerColor = Color.Red,
-        disabledContentColor = Color.Magenta
+        disabledContainerColor = Color(76, 175, 80, 100),
+        disabledContentColor = Color.White
     ),
     val canalButtonColor: ButtonColors = ButtonColors(
         containerColor = Color(223, 7, 56, 255),

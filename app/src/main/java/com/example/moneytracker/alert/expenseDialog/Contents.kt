@@ -97,12 +97,15 @@ fun ShowExpenseAlertDialog(
                     )
                 },
                 confirmButton = {
+                    var bothAreFielded = expenseState.value.text.isNotEmpty() &&
+                            expenseDescState.value.text.isNotEmpty()
                     Button(
                         colors = dialogDataClass.addButtonColor,
                         shape = dialogDataClass.buttonShape,
+                        enabled = bothAreFielded,
                         onClick = {
                             // Retrieve the entered text
-                            val expense = expenseState.value.text
+                            val expense = expenseState.value.text.replace(" ", "")
                             var dayOfWeek = dayOfWeekState.value.text
                             var day = dayState.value.text
                             var month = monthState.value.text

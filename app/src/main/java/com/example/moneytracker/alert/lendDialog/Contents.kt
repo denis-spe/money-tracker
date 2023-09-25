@@ -95,26 +95,29 @@ fun ShowLendAlertDialog(
                     )
                 },
                 confirmButton = {
+                    var bothAreFielded = lendState.value.text.isNotEmpty() &&
+                            lendDescState.value.text.isNotEmpty()
                     Button(
                         colors = dialogDataClass.addButtonColor,
                         shape = dialogDataClass.buttonShape,
+                        enabled = bothAreFielded,
                         onClick = {
                             // Retrieve the entered text
-                            val earned = lendState.value.text
+                            val lend = lendState.value.text.replace(" ", "")
                             val dayOfWeek = dayOfWeekState.value.text
                             val day = dayState.value.text
                             val month = monthState.value.text
                             val year = yearState.value.text
                             val description = lendDescState.value.text
 
-                            if (earned != "" && dayOfWeek != "") {
+                            if (lend != "" && dayOfWeek != "") {
                                 // Example usage: Insert user
                                 incomeViewModel.insertUser(
                                     dayOfWeek = dayOfWeek,
                                     day = day,
                                     month = month,
                                     year = year,
-                                    earned = earned.toDouble(),
+                                    earned = lend.toDouble(),
                                     description = description
                                 )
                                 lendState.value = TextFieldValue("")

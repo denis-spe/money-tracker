@@ -15,6 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.moneytracker.pages.scaffold.ScaffoldDataClass
+import limitDigit
+import shortenNumber
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -66,7 +68,7 @@ fun CurrentDateStats(
                 val scaledIncome = bigDecimal.setScale(2, RoundingMode.UP)
 
                 Text(
-                    text = shortenNumber(scaledIncome),
+                    text = shortenNumber(scaledIncome).limitDigit(7),
                     color = color.incomeColor,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
@@ -87,8 +89,11 @@ fun CurrentDateStats(
                 val scaledExpense = bigDecimal.setScale(2, RoundingMode.UP)
 
                 Text(
-                    text = if (income == null) "-${shortenNumber(scaledExpense)}"
-                           else shortenNumber(scaledExpense),
+                    text = if (income == null) "-${
+                        shortenNumber(scaledExpense)
+                            .limitDigit(7)}"
+                           else shortenNumber(scaledExpense)
+                               .limitDigit(7),
                     color = color.expenseColor,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
@@ -110,19 +115,22 @@ fun CurrentDateStats(
 
                 if (amount > 0.0){
                     Text(
-                        text = shortenNumber(scaledAmount),
+                        text = shortenNumber(scaledAmount)
+                            .limitDigit(7),
                         color = color.incomeColor,
                         fontWeight = FontWeight.Bold
                     )
                 } else if(amount == 0.0){
                     Text(
-                        text = shortenNumber(scaledAmount),
+                        text = shortenNumber(scaledAmount)
+                            .limitDigit(7),
                         color = color.remainderColor,
                         fontWeight = FontWeight.Bold
                     )
                 } else{
                     Text(
-                        text = shortenNumber(scaledAmount),
+                        text = shortenNumber(scaledAmount)
+                            .limitDigit(7),
                         color = color.expenseColor,
                         fontWeight = FontWeight.Bold
                     )
@@ -134,7 +142,8 @@ fun CurrentDateStats(
                 val scaledExpense = bigDecimal.setScale(2, RoundingMode.UP)
 
                 Text(
-                    text = "-${shortenNumber(scaledExpense)}",
+                    text = "-${shortenNumber(scaledExpense)
+                        .limitDigit(7)}",
                     color = color.expenseColor,
                     fontWeight = FontWeight.Bold
                 )
@@ -145,7 +154,8 @@ fun CurrentDateStats(
                 val scaledIncome = bigDecimal.setScale(2, RoundingMode.UP)
 
                 Text(
-                    text = shortenNumber(scaledIncome),
+                    text = shortenNumber(scaledIncome)
+                        .limitDigit(7),
                     color = color.incomeColor,
                     fontWeight = FontWeight.Bold
                 )
@@ -161,15 +171,3 @@ fun CurrentDateStats(
 }
 
 
-fun shortenNumber(number: BigDecimal): String {
-    val suffixes = arrayOf("", "K", "M", "B", "T") // Add more suffixes as needed
-    var index = 0
-    var num = number.toDouble()
-
-    while (num >= 1000 && index < suffixes.size - 1) {
-        num /= 1000
-        index++
-    }
-
-    return "%.2f%s".format(num, suffixes[index])
-}

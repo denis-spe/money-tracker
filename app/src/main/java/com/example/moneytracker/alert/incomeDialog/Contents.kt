@@ -103,12 +103,15 @@ fun ShowIncomeAlertDialog(
                     )
                 },
                 confirmButton = {
+                    var bothAreFielded = incomeState.value.text.isNotEmpty() &&
+                            incomeDescState.value.text.isNotEmpty()
                     Button(
                         colors = dialogDataClass.addButtonColor,
                         shape = dialogDataClass.buttonShape,
+                        enabled = bothAreFielded,
                         onClick = {
                             // Retrieve the entered text
-                            val earned = incomeState.value.text
+                            val earned = incomeState.value.text.replace(" ", "")
                             var dayOfWeek = dayOfWeekState.value.text
                             var day = dayState.value.text
                             var month = monthState.value.text
