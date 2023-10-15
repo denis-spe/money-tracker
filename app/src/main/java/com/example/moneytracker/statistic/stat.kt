@@ -14,18 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.moneytracker.pages.scaffold.ScaffoldDataClass
 import limitDigit
 import shortenNumber
 import java.math.BigDecimal
 import java.math.RoundingMode
+import kotlin.math.absoluteValue
 
 @Composable
 fun CurrentDateStats(
     income: Double?,
     expense: Double?
 ) {
-    val color = ScaffoldDataClass()
+    val statDataclass = StatDataclass()
 
     Row(
         modifier = Modifier
@@ -37,29 +37,33 @@ fun CurrentDateStats(
 
             Text(
                 text = "Income:",
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = statDataclass.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = statDataclass.incomeColor
             )
 
             Text(
                 text = "Expenses:",
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = statDataclass.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = statDataclass.expenseColor
             )
 
             Text(
                 text = "Remainder:",
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = statDataclass.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = statDataclass.remainderColor
             )
         }
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(9.dp))
 
         Column {
+
+            /**
+             * Income
+             */
 
             if (income != null) {
 
@@ -69,19 +73,22 @@ fun CurrentDateStats(
 
                 Text(
                     text = shortenNumber(scaledIncome).limitDigit(7),
-                    color = color.incomeColor,
-                    fontSize = 13.sp,
+                    color = statDataclass.incomeColor,
+                    fontSize = statDataclass.fontSize,
                     fontWeight = FontWeight.Bold
                 )
             } else {
                 Text(
                     text = "0,0",
-                    color = color.incomeColor,
-                    fontSize = 13.sp,
+                    color = statDataclass.incomeColor,
+                    fontSize = statDataclass.fontSize,
                     fontWeight = FontWeight.Bold
                 )
             }
 
+            /**
+             * Expenses
+             */
             if (expense != null) {
 
                 // Rounding the income
@@ -94,45 +101,51 @@ fun CurrentDateStats(
                             .limitDigit(7)}"
                            else shortenNumber(scaledExpense)
                                .limitDigit(7),
-                    color = color.expenseColor,
-                    fontSize = 13.sp,
+                    color = statDataclass.expenseColor,
+                    fontSize = statDataclass.fontSize,
                     fontWeight = FontWeight.Bold
                 )
             } else {
                 Text(
                     text = "0,0",
-                    color = color.expenseColor,
-                    fontSize = 13.sp,
+                    color = statDataclass.expenseColor,
+                    fontSize = statDataclass.fontSize,
                     fontWeight = FontWeight.Bold
                 )
             }
 
+            /**
+             * Remainder
+             */
             if (income != null && expense != null) {
                 val amount = (income - expense)
                 // Rounding the amount
-                val bigDecimal = BigDecimal(amount)
+                val bigDecimal = BigDecimal(amount.absoluteValue)
                 val scaledAmount = bigDecimal.setScale(2, RoundingMode.UP)
 
                 if (amount > 0.0){
                     Text(
                         text = shortenNumber(scaledAmount)
                             .limitDigit(7),
-                        color = color.incomeColor,
-                        fontWeight = FontWeight.Bold
+                        color = statDataclass.incomeColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = statDataclass.fontSize,
                     )
                 } else if(amount == 0.0){
                     Text(
                         text = shortenNumber(scaledAmount)
                             .limitDigit(7),
-                        color = color.remainderColor,
-                        fontWeight = FontWeight.Bold
+                        color = statDataclass.remainderColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = statDataclass.fontSize,
                     )
                 } else{
                     Text(
-                        text = shortenNumber(scaledAmount)
-                            .limitDigit(7),
-                        color = color.expenseColor,
-                        fontWeight = FontWeight.Bold
+                        text = "-${shortenNumber(scaledAmount)
+                            .limitDigit(7)}",
+                        color = statDataclass.expenseColor,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = statDataclass.fontSize,
                     )
                 }
             } else if (
@@ -144,8 +157,9 @@ fun CurrentDateStats(
                 Text(
                     text = "-${shortenNumber(scaledExpense)
                         .limitDigit(7)}",
-                    color = color.expenseColor,
-                    fontWeight = FontWeight.Bold
+                    color = statDataclass.expenseColor,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = statDataclass.fontSize,
                 )
             } else if (
                 income != null) {
@@ -156,14 +170,16 @@ fun CurrentDateStats(
                 Text(
                     text = shortenNumber(scaledIncome)
                         .limitDigit(7),
-                    color = color.incomeColor,
-                    fontWeight = FontWeight.Bold
+                    color = statDataclass.incomeColor,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = statDataclass.fontSize,
                 )
             }else {
                 Text(
                     text = "0,0",
-                    color = color.remainderColor,
-                    fontWeight = FontWeight.Bold
+                    color = statDataclass.remainderColor,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = statDataclass.fontSize,
                 )
             }
         }

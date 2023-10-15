@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.moneytracker.models.expense.ExpenseViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
-import com.example.moneytracker.pages.MainPage
+import com.example.moneytracker.pages.main.MainPage
 import com.example.moneytracker.pages.MonthPage
 
 

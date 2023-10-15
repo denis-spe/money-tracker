@@ -1,9 +1,11 @@
 package com.example.moneytracker.pages.scaffold
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import com.example.moneytracker.R
 
 data class ScaffoldDataClass(
+    val floatingActionButtonTextFontWeight: FontWeight = FontWeight.ExtraBold,
     val incomeColor: Color = Color(76, 175, 80, 255),
     val expenseColor: Color = Color(223, 7, 56, 255),
     val remainderColor: Color = Color(3, 169, 244, 255),

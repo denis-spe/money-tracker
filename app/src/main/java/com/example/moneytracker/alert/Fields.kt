@@ -46,20 +46,6 @@ fun formatWithSpaces(text: String): String {
     return spacedText
 }
 
-//fun formatWithSpaces(text: String): String {
-//    val cleanedText = text.filter { it.isDigit() || it == '.' }
-//    val parts = cleanedText.split(".")
-//    val integerPart = parts.getOrNull(0) ?: ""
-//    val decimalPart = parts.getOrNull(1) ?: ""
-//
-//    val integerWithSpaces = integerPart.chunked(3).joinToString(" ") { it }
-//
-//    return if (decimalPart.isNotEmpty()) {
-//        "$integerWithSpaces.$decimalPart"
-//    } else {
-//        integerWithSpaces
-//    }
-//}
 
 @SuppressLint("UnrememberedMutableState")
 @Composable

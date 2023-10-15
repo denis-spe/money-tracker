@@ -3,6 +3,7 @@ package com.example.moneytracker.pages.scaffold
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,7 +79,6 @@ fun ScaffoldComponent(
 
     // stats data class
     val scaffoldDataClass = ScaffoldDataClass()
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
@@ -138,7 +138,7 @@ fun ScaffoldComponent(
                             })?.let { painterResource(id = it) }?.let {
                                 Icon(
                                     painter = it,
-                                    contentDescription = "Add Dialog",
+                                    contentDescription = "Expense Icon",
                                     modifier = Modifier.size(24.dp)
                                 )
                             }
@@ -302,7 +302,10 @@ fun FloatActionButton(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.height(60.dp)
             ) {
-                Text(text = text)
+                Text(
+                    text = text,
+                    fontWeight = ScaffoldDataClass().floatingActionButtonTextFontWeight
+                )
             }
         Spacer(modifier = Modifier.width(5.dp))
         Column(

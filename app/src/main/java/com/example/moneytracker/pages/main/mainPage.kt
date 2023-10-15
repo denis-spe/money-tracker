@@ -1,10 +1,11 @@
-package com.example.moneytracker.pages
+package com.example.moneytracker.pages.main
 
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -35,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -44,9 +47,15 @@ import com.example.moneytracker.charts.DonutPieChart
 import com.example.moneytracker.date.getCurrentDate
 import com.example.moneytracker.models.expense.ExpenseViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
+import com.example.moneytracker.pages.Header
 import com.example.moneytracker.pages.scaffold.ScaffoldComponent
 import com.example.moneytracker.pages.scaffold.ScaffoldDataClass
 import com.example.moneytracker.statistic.CurrentDateStats
+
+/**
+ * Dataclass
+ */
+val mainDataclass: MainDataclass = MainDataclass()
 
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -88,11 +97,11 @@ fun MainPageContents(
         // Header contents
         Header()
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .clip(RoundedCornerShape(21.dp))
                 .background(
-                    Color(0.4f, 0.4f, 0.4f, 0.3f)
+                    mainDataclass.lazyColumnBackgroundColor
                 )
                 .fillMaxSize()
                 .padding(10.dp)
@@ -115,62 +124,58 @@ fun MainPageContents(
 
 
 
-            Column(
-                modifier = Modifier.fillMaxSize()
+            item(
+                1
+//                modifier = Modifier.fillMaxSize()
             ) {
 
                 /*
                     Day Container
                  */
                 CurrentDateContainer(
-                    height = 0.14f,
+//                    height = 0.25f,
                     expandedContents = {
                     },
                     firstPart = {
-                        Column(
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.Center
-                        ) {
 
-                            Text(
-                                text = "Day",
-                                fontWeight = FontWeight(600),
-                                color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 20.sp,
-                                modifier = Modifier.padding(bottom = 0.1.dp)
+                        Text(
+                            text = "Day",
+                            fontWeight = FontWeight(600),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 22.sp,
+                            modifier = Modifier.padding(bottom = 0.1.dp)
+                        )
+
+                        Text(
+                            text = weekDay ?: "",
+                            fontWeight = FontWeight(600),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(top = 0.1.dp),
+
                             )
 
-                            Text(
-                                text = weekDay ?: "",
-                                fontWeight = FontWeight(600),
-                                color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 17.sp,
-                                modifier = Modifier.padding(top = 0.1.dp),
-
-                                )
 
 
-
-                            Text(
-                                text = (
-                                        if (currentDayOfMonth?.length!! > 1) "$currentDayOfMonth"
-                                        else "0$currentDayOfMonth"),
-                                fontWeight = FontWeight(600),
-                                color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 17.sp
-                            )
-                        }
+                        Text(
+                            text = (
+                                    if (currentDayOfMonth?.length!! > 1) "$currentDayOfMonth"
+                                    else "0$currentDayOfMonth"),
+                            fontWeight = FontWeight(600),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            fontSize = 20.sp
+                        )
                     },
                     secondPart = {
                         // fetch the live data
                         incomeViewModel.getTotalEarnedADay(
                             currentDayOfMonth.toString(),
-                            currentMonth?:"",
+                            currentMonth ?: "",
                             currentYear.toString()
                         )
                         expenseViewModel.getTotalExpenseADay(
                             currentDayOfMonth.toString(),
-                            currentMonth?:"",
+                            currentMonth ?: "",
                             currentYear.toString()
                         )
 
@@ -228,7 +233,7 @@ fun MainPageContents(
                     Month Container
                  */
                 CurrentDateContainer(
-                    height = 0.18f,
+//                    height = 0.95f,
                     expandedContents = {
 
                     },
@@ -241,13 +246,13 @@ fun MainPageContents(
                                 text = "Month",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 20.sp
+                                fontSize = 22.sp
                             )
                             Text(
-                                text = currentMonth?:"",
+                                text = currentMonth ?: "",
                                 fontWeight = FontWeight(600),
                                 color = MaterialTheme.colorScheme.onBackground,
-                                fontSize = 17.sp
+                                fontSize = 20.sp
                             )
                         }
                     },
@@ -277,10 +282,12 @@ fun MainPageContents(
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
                             DonutChartInput(
                                 currentEarningAMonth ?: 0.0,
-                                scaffoldDataClass.incomeColor),
+                                scaffoldDataClass.incomeColor
+                            ),
                             DonutChartInput(
                                 currentExpenseAMonth ?: 0.0,
-                                scaffoldDataClass.expenseColor)
+                                scaffoldDataClass.expenseColor
+                            )
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
@@ -316,7 +323,7 @@ fun MainPageContents(
                     Year Container
                  */
                 CurrentDateContainer(
-                    height = 0.25f,
+//                    height = 0.25f,
                     expandedContents = {
                         Row() {
                             Column() {
@@ -368,13 +375,13 @@ fun MainPageContents(
                             text = "Year",
                             fontWeight = FontWeight(600),
                             color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 20.sp
+                            fontSize = 22.sp
                         )
                         Text(
                             text = currentYear.toString(),
                             fontWeight = FontWeight(600),
                             color = MaterialTheme.colorScheme.onBackground,
-                            fontSize = 17.sp
+                            fontSize = 20.sp
                         )
                     },
                     secondPart = {
@@ -393,11 +400,13 @@ fun MainPageContents(
 
                         val listOfDonutPieInput: List<DonutChartInput> = listOf(
                             DonutChartInput(
-                                currentEarningAYear?:0.0,
-                                scaffoldDataClass.incomeColor),
+                                currentEarningAYear ?: 0.0,
+                                scaffoldDataClass.incomeColor
+                            ),
                             DonutChartInput(
                                 currentExpenseAYear ?: 0.0,
-                                scaffoldDataClass.expenseColor)
+                                scaffoldDataClass.expenseColor
+                            )
                         )
 
                         DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(100.dp))
@@ -418,8 +427,21 @@ fun MainPageContents(
                     Spacer(modifier = Modifier.height(5.dp))
                     CurrentDateStats(income = currentEarningAYear, expense = currentExpenseAYear)
                 }
-
             }
+
+            item(2) {
+                debtAndLendingContainer()
+            }
+
+//            item(4) {
+//                Column(
+//                    modifier = Modifier
+//                        .height(80.dp)
+//                        .fillMaxWidth()
+//                ) {
+//                    Text(text = "Debts And Lending")
+//                }
+//            }
         }
 
 //        LazyColumn(
@@ -503,7 +525,6 @@ fun MainPageContents(
 
 @Composable
 fun CurrentDateContainer(
-    height: Float = 0.13f,
     expandedContents: @Composable () -> Unit,
     firstPart: @Composable () -> Unit,
     secondPart: @Composable () -> Unit,
@@ -517,7 +538,7 @@ fun CurrentDateContainer(
     var bottomStart = 9
     var bottomEnd = 9
 
-    if (expanded){
+    if (expanded) {
         bottomStart = 0
         bottomEnd = 0
     }
@@ -533,43 +554,45 @@ fun CurrentDateContainer(
                 )
             )
             .fillMaxWidth()
-            .fillMaxHeight(height)
+            .height(mainDataclass.currentDateContainerHeight)
             .background(
                 Brush.linearGradient(listOf(Color.DarkGray, Color.LightGray)),
                 alpha = 0.3f
             )
-            .padding(1.dp)
+            .padding(1.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
         // Current date
         Column(
             modifier = Modifier
-                .fillMaxHeight()
+                .height(80.dp)
                 .fillMaxWidth(0.2f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             firstPart()
         }
-        Spacer(modifier = Modifier.width(1.dp))
+        Spacer(modifier = Modifier.width(1.2.dp))
 
         // Pie chart
         Column(
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.2f),
+                .height(80.dp)
+                .fillMaxWidth(0.27f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             secondPart()
         }
-        Spacer(modifier = Modifier.width(1.dp))
+        Spacer(modifier = Modifier.width(0.2.dp))
 
         // Statistic section
         Column(
             modifier = Modifier
-                .padding(start = 5.dp)
-                .fillMaxHeight()
+                .padding(start = 2.dp)
+                .height(80.dp)
                 .fillMaxWidth(0.9f),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
@@ -625,5 +648,164 @@ fun CurrentDateContainer(
             }
         }
         expandedIcon = Icons.Default.KeyboardArrowDown
+    }
+}
+
+@Composable
+fun debtAndLendingContainer(){
+    Spacer(modifier = Modifier.height(5.dp))
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(9.dp))
+            .height(mainDataclass.debtAndLendingContainerRowHeight)
+            .background(
+                Brush.linearGradient(listOf(Color.DarkGray, Color.LightGray)),
+                alpha = 0.1f
+            )
+            .padding(start = 9.dp, end = 9.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        /**
+         * Lending
+         */
+        Column (
+            modifier = Modifier
+                .clip(RoundedCornerShape(9.dp))
+                .fillMaxHeight()
+                .width(mainDataclass.debtAndLendingSmallContainerWidth),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+        ){
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Lend",
+                    fontSize = mainDataclass.lendAndDebtFontSize,
+                    fontWeight = mainDataclass.fontWeight,
+                    color = mainDataclass.lendColor
+                )
+            }
+            
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Amount:  2121.76",
+                    fontWeight = mainDataclass.lendAndDebtTextFontWeight,
+                    fontSize = mainDataclass.lendAndDebtTextFontSize,
+                    color = mainDataclass.lendColor
+                )
+                Text(
+                    text = "To: Sam",
+                    fontWeight = mainDataclass.lendAndDebtTextFontWeight,
+                    fontSize = mainDataclass.lendAndDebtTextFontSize,
+                    color = mainDataclass.lendColor
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(1.dp))
+
+        /**
+         * Doughnut chart
+         */
+        Column (
+            modifier = Modifier
+                .clip(RoundedCornerShape(9.dp))
+                .fillMaxHeight()
+                .width(100.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Recently",
+                    fontSize = mainDataclass.recentlyFontSize,
+                    fontWeight = mainDataclass.fontWeight
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                val listOfDonutPieInput: List<DonutChartInput> = listOf(
+                    DonutChartInput(
+                        2121.76,
+                        mainDataclass.debtsColor
+                    ),
+                    DonutChartInput(
+                        2121.76,
+                        mainDataclass.lendColor
+                    )
+                )
+
+                DonutPieChart(data = listOfDonutPieInput, modifier = Modifier.size(95.dp))
+            }
+
+
+
+        }
+
+        Spacer(modifier = Modifier.width(1.dp))
+
+        /**
+         * Debts
+         */
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(9.dp))
+                .fillMaxHeight()
+                .width(mainDataclass.debtAndLendingSmallContainerWidth),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Debts",
+                    fontSize = mainDataclass.lendAndDebtFontSize,
+                    fontWeight = mainDataclass.fontWeight,
+                    color = mainDataclass.debtsColor
+                )
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "2121.76 :Amount",
+                    fontWeight = mainDataclass.lendAndDebtTextFontWeight,
+                    fontSize = mainDataclass.lendAndDebtTextFontSize,
+                    color = mainDataclass.debtsColor
+                )
+                Text(
+                    text = "From: Sam",
+                    fontWeight = mainDataclass.lendAndDebtTextFontWeight,
+                    fontSize = mainDataclass.lendAndDebtTextFontSize,
+                    color = mainDataclass.debtsColor
+                )
+            }
+        }
     }
 }
