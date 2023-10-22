@@ -3,7 +3,6 @@ package com.example.moneytracker.pages.scaffold
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,7 +39,9 @@ import com.example.moneytracker.alert.debtsDialog.ShowDebtAlertDialog
 import com.example.moneytracker.alert.expenseDialog.ShowExpenseAlertDialog
 import com.example.moneytracker.alert.lendDialog.ShowLendAlertDialog
 import com.example.moneytracker.modelDrawer.ModelDrawerContents
+import com.example.moneytracker.models.debts.DebtViewModel
 import com.example.moneytracker.models.expense.ExpenseViewModel
+import com.example.moneytracker.models.lend.LendViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -50,6 +51,8 @@ import com.example.moneytracker.models.income.IncomeViewModel
 fun ScaffoldComponent(
     incomeViewModel: IncomeViewModel,
     expenseViewModel: ExpenseViewModel,
+    debtViewModel: DebtViewModel,
+    lendViewModel: LendViewModel,
     scaffoldContents: @Composable () -> Unit
 ) {
 
@@ -202,6 +205,7 @@ fun ScaffoldComponent(
                     Spacer(modifier = Modifier.height(7.dp))
                 }
 
+
                 val expendBtnColor = if (isExpanded) {
                     Color(22, 123, 202, 255)
                 } else {
@@ -251,7 +255,7 @@ fun ScaffoldComponent(
         dayState = dayState,
         monthState = monthState,
         yearState = yearState,
-        incomeViewModel = incomeViewModel
+        debtViewModel = debtViewModel
     )
 
     ShowLendAlertDialog(
@@ -262,7 +266,7 @@ fun ScaffoldComponent(
         dayState = dayState,
         monthState = monthState,
         yearState = yearState,
-        incomeViewModel = incomeViewModel
+        lendViewModel = lendViewModel
     )
 
     ShowExpenseAlertDialog(

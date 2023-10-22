@@ -1,18 +1,15 @@
-package com.example.moneytracker.models.expense
+package com.example.moneytracker.models.debts
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.moneytracker.models.income.Income
 
 @Entity(
-    tableName = "Expense"
+    tableName = "Debts"
 )
-data class Expense(
+data class Debts(
     @PrimaryKey(autoGenerate = true)
-    var expenseId: Int = 0,
+    var debtId: Int = 0,
     @ColumnInfo
     val dayOfWeek: String,
     @ColumnInfo
@@ -22,7 +19,8 @@ data class Expense(
     @ColumnInfo
     val year: String,
     @ColumnInfo
-    var expense: Double,
+    var debt: Double,
     @ColumnInfo
     var description: String
+
 )

@@ -18,6 +18,7 @@ import com.example.moneytracker.alert.DescriptionTextField
 import com.example.moneytracker.alert.DialogDataClass
 import com.example.moneytracker.date.ClickableDateText
 import com.example.moneytracker.models.income.IncomeViewModel
+import com.example.moneytracker.models.lend.LendViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +69,7 @@ fun ShowLendAlertDialog(
     dayState: MutableState<TextFieldValue>,
     monthState: MutableState<TextFieldValue>,
     yearState: MutableState<TextFieldValue>,
-    incomeViewModel: IncomeViewModel,
+    lendViewModel: LendViewModel,
 ) {
 
     // Dialog data class
@@ -112,12 +113,12 @@ fun ShowLendAlertDialog(
 
                             if (lend != "" && dayOfWeek != "") {
                                 // Example usage: Insert user
-                                incomeViewModel.insertUser(
+                                lendViewModel.insertLend(
                                     dayOfWeek = dayOfWeek,
                                     day = day,
                                     month = month,
                                     year = year,
-                                    earned = lend.toDouble(),
+                                    lend = lend.toDouble(),
                                     description = description
                                 )
                                 lendState.value = TextFieldValue("")

@@ -20,6 +20,7 @@ import com.example.moneytracker.alert.DialogDataClass
 import com.example.moneytracker.date.ClickableDateText
 import com.example.moneytracker.date.getCurrentDate
 import com.example.moneytracker.models.expense.ExpenseViewModel
+import com.example.moneytracker.models.lend.LendViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)

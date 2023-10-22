@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moneytracker.models.lend.Lend
+import com.example.moneytracker.models.lend.LendRepository
 import kotlinx.coroutines.launch
 
 class ExpenseViewModel(private val expenseRepository: ExpenseRepository,

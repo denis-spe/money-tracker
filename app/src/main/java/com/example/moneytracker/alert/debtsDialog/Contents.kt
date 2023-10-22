@@ -2,6 +2,7 @@ package com.example.moneytracker.alert.debtsDialog
 
 import android.content.Context
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
@@ -13,11 +14,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.core.text.isDigitsOnly
 import com.example.moneytracker.alert.AmountTextField
 import com.example.moneytracker.alert.DescriptionTextField
 import com.example.moneytracker.alert.DialogDataClass
 import com.example.moneytracker.date.ClickableDateText
-import com.example.moneytracker.models.income.IncomeViewModel
+import com.example.moneytracker.date.getCurrentDate
+import com.example.moneytracker.models.debts.DebtViewModel
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,9 +35,6 @@ fun debtsAlertDialogContent(
     yearState: MutableState<TextFieldValue>,
     mContext: Context = LocalContext.current
 ) {
-
-    // Dialog data class
-    val dialogDataClass = DialogDataClass()
 
     Column {
         AmountTextField(
@@ -67,11 +68,14 @@ fun ShowDebtAlertDialog(
     dayState: MutableState<TextFieldValue>,
     monthState: MutableState<TextFieldValue>,
     yearState: MutableState<TextFieldValue>,
-    incomeViewModel: IncomeViewModel,
+    debtViewModel: DebtViewModel,
 ) {
 
     // Dialog data class
     val dialogDataClass = DialogDataClass()
+
+    // App context
+    val context = LocalContext.current
 
     Column {
         if (showDialog.value) {
@@ -104,27 +108,52 @@ fun ShowDebtAlertDialog(
                         onClick = {
                             // Retrieve the entered text
                             val debt = debtState.value.text.replace(" ", "")
-                            val dayOfWeek = dayOfWeekState.value.text
-                            val day = dayState.value.text
-                            val month = monthState.value.text
-                            val year = yearState.value.text
+                            var dayOfWeek = dayOfWeekState.value.text
+                            var day = dayState.value.text
+                            var month = monthState.value.text
+                            var year = yearState.value.text
                             val description = debtDescState.value.text
 
-                            if (debt != "" && dayOfWeek != "") {
+                            if (debt != "" && description != "") {
+                                // Get the current date: currentDate
+                                val currentDate: Map<String, String> = getCurrentDate()
+
+                                if (dayOfWeek == "") {
+                                    dayOfWeek = currentDate["dayOfWeek"].toString()
+                                    month = currentDate["month"].toString()
+                                    year = currentDate["year"].toString()
+                                    day = currentDate["dayOfMonth"].toString()
+                                }
+
                                 // Example usage: Insert user
-                                incomeViewModel.insertUser(
+                                debtViewModel.insertDebt(
                                     dayOfWeek = dayOfWeek,
                                     day = day,
                                     month = month,
                                     year = year,
-                                    earned = debt.toDouble(),
-                                    description = description
+                                    description=if (description.isDigitsOnly()) description
+                                    else description.lowercase(Locale.ROOT),
+                                    debt = debt.toDouble()
                                 )
-                                debtState.value = TextFieldValue("")
+
+                                Toast.makeText(
+                                    context,
+                                    "Earned Income From $description",
+                                    Toast.LENGTH_LONG).show()
+
+                                debtDescState.value = TextFieldValue("")
                                 dayOfWeekState.value = TextFieldValue("")
                                 dayState.value = TextFieldValue("")
                                 monthState.value = TextFieldValue("")
                                 yearState.value = TextFieldValue("")
+                                debtState.value = TextFieldValue("")
+                            } else{
+                                Toast.makeText(
+                                    context,
+                                    "Insert The ${
+                                        if (debt.isEmpty()) "Income Amount" else "Description"
+                                    }",
+                                    Toast.LENGTH_LONG).show()
                             }
 
                             // Perform the desired action with the entered text

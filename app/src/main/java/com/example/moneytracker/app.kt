@@ -9,7 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.moneytracker.models.debts.DebtViewModel
+import com.example.moneytracker.models.expense.Expense
 import com.example.moneytracker.models.expense.ExpenseViewModel
+import com.example.moneytracker.models.lend.LendViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.pages.main.MainPage
 import com.example.moneytracker.pages.MonthPage
@@ -23,13 +26,17 @@ import com.example.moneytracker.pages.MonthPage
 fun App(
     incomeViewModel: IncomeViewModel,
     expenseViewModel: ExpenseViewModel,
+    lendViewModel: LendViewModel,
+    debtViewModel: DebtViewModel,
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "HomePage") {
         composable("HomePage") { MainPage (
             navController = navController,
             incomeViewModel = incomeViewModel,
-            expenseViewModel = expenseViewModel
+            expenseViewModel = expenseViewModel,
+            lendViewModel = lendViewModel,
+            debtViewModel=debtViewModel
         ) }
 
         composable(
@@ -44,7 +51,9 @@ fun App(
                     year,
                     navController = navController,
                     incomeViewModel = incomeViewModel,
-                    expenseViewModel = expenseViewModel
+                    expenseViewModel = expenseViewModel,
+                    lendViewModel = lendViewModel,
+                    debtViewModel=debtViewModel
                 )
             }
         }
