@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "Income")
-data class Income (
+data class Income(
     @PrimaryKey(autoGenerate = true)
     val incomeId: Int = 0,
     @ColumnInfo

@@ -13,13 +13,15 @@ import com.example.moneytracker.models.lend.LendDao
 import com.example.moneytracker.models.income.Income
 import com.example.moneytracker.models.income.IncomeDao
 
-@Database(entities = [
-    Income::class,
-    Expense::class,
-    Lend::class,
-    Debts::class],
+@Database(
+    entities = [
+        Income::class,
+        Expense::class,
+        Lend::class,
+        Debts::class],
     version = 2,
-    exportSchema = false)
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun incomeDao(): IncomeDao
     abstract fun expenseDao(): ExpenseDao

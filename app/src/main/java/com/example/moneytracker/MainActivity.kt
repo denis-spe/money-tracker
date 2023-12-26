@@ -1,5 +1,6 @@
 package com.example.moneytracker
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,17 +27,38 @@ import com.example.moneytracker.models.income.IncomeDao
 import com.example.moneytracker.models.income.IncomeRepository
 import com.example.moneytracker.models.income.IncomeViewModel
 import com.example.moneytracker.ui.theme.MoneyTrackerTheme
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
 
 class MainActivity : ComponentActivity() {
+
     // Instantiate view models
     private lateinit var incomeViewModel: IncomeViewModel
     private lateinit var expenseViewModel: ExpenseViewModel
     private lateinit var lendViewModel: LendViewModel
     private lateinit var debtViewModel: DebtViewModel
 
+    // Declare an instance of FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+
+    // Get the current user
+    private var currentUser: FirebaseUser? = null
+
+    // App context
+    private val context: Context = this
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initializer the Firebase app
+        FirebaseApp.initializeApp(this)
+
+        // Initialize Firebase Auth
+        auth = Firebase.auth
 
         // Initialize the dao
         val incomeDao: IncomeDao = AppDatabase.getInstance(this).incomeDao()
@@ -67,10 +89,20 @@ class MainActivity : ComponentActivity() {
                         incomeViewModel,
                         expenseViewModel=expenseViewModel,
                         lendViewModel=lendViewModel,
-                        debtViewModel=debtViewModel
+                        debtViewModel=debtViewModel,
+                        auth = auth,
+                        currentUser = currentUser
                     )
                 }
             }
+        }
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        if (auth.currentUser != null) {
+            this.currentUser = auth.currentUser
         }
     }
 }
@@ -106,11 +138,16 @@ fun GreetingPreview() {
         lendViewModel = LendViewModel(lendRepository, context)
         debtViewModel = DebtViewModel(debtRepository, context)
 
+        val auth: FirebaseAuth = Firebase.auth
+        val currentUser = auth.currentUser
+
         App(
             incomeViewModel,
             expenseViewModel=expenseViewModel,
             lendViewModel=lendViewModel,
-            debtViewModel=debtViewModel
+            debtViewModel=debtViewModel,
+            auth,
+            currentUser
         )
     }
 }

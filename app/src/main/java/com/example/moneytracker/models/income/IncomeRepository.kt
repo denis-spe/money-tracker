@@ -13,27 +13,27 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         return incomeDao.getMonth(year)
     }
 
-    fun getMeanForEarningAYear(year: String): LiveData<Double>{
+    fun getMeanForEarningAYear(year: String): LiveData<Double> {
         return incomeDao.getMeanForEarningAYear(year)
     }
 
-    fun getMinForEarningAYear(year: String): LiveData<Double>{
+    fun getMinForEarningAYear(year: String): LiveData<Double> {
         return incomeDao.getMinForEarningAYear(year)
     }
 
-    fun getMaxForEarningAYear(year: String): LiveData<Double>{
+    fun getMaxForEarningAYear(year: String): LiveData<Double> {
         return incomeDao.getMaxForEarningAYear(year)
     }
 
-    fun getTotalEarnedAYear(year: String): LiveData<Double>{
+    fun getTotalEarnedAYear(year: String): LiveData<Double> {
         return incomeDao.totalEarnedAYear(year)
     }
 
-    fun getTotalEarnedAMonth(month: String, year: String): LiveData<Double>{
+    fun getTotalEarnedAMonth(month: String, year: String): LiveData<Double> {
         return incomeDao.totalEarnedAMonth(month, year)
     }
 
-    fun getTotalEarnedADay(day: String, month: String, year: String): LiveData<Double>{
+    fun getTotalEarnedADay(day: String, month: String, year: String): LiveData<Double> {
         return incomeDao.totalEarnedADay(day, month, year)
     }
 
@@ -41,12 +41,14 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         return incomeDao.getUniqueYear()
     }
 
-    suspend fun insertData(dayOfWeek: String,
-                           day: String,
-                           month: String,
-                           year: String,
-                           description: String,
-                           earned: Double){
+    suspend fun insertData(
+        dayOfWeek: String,
+        day: String,
+        month: String,
+        year: String,
+        description: String,
+        earned: Double
+    ) {
         val user = Income(
             dayOfWeek = dayOfWeek,
             day = day,
@@ -60,7 +62,7 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         }
     }
 
-    suspend fun deleteUser(user: Income){
+    suspend fun deleteUser(user: Income) {
         withContext(Dispatchers.IO) {
             incomeDao.deleteUser(user)
         }

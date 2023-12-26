@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class IncomeViewModel(private val incomeRepository: IncomeRepository,
-                      @SuppressLint("StaticFieldLeak") private val applicationContext: Context) : ViewModel() {
+class IncomeViewModel(
+    private val incomeRepository: IncomeRepository,
+    @SuppressLint("StaticFieldLeak") private val applicationContext: Context
+) : ViewModel() {
 
     private val _incomeLiveData = MutableLiveData<List<Income>>()
     val incomeLiveData: LiveData<List<Income>> get() = _incomeLiveData
@@ -41,20 +43,20 @@ class IncomeViewModel(private val incomeRepository: IncomeRepository,
     private val _liveMaxForEarningAYear = MutableLiveData<Double>()
     val liveMaxForEarningAYear: MutableLiveData<Double> get() = _liveMaxForEarningAYear
 
-    fun getMeanForEarningAYear(year: String){
-        incomeRepository.getMeanForEarningAYear(year).observeForever{ mean ->
+    fun getMeanForEarningAYear(year: String) {
+        incomeRepository.getMeanForEarningAYear(year).observeForever { mean ->
             liveMeanForEarningAYear.value = mean
         }
     }
 
-    fun getMinForEarningAYear(year: String){
-        incomeRepository.getMinForEarningAYear(year).observeForever{ min ->
+    fun getMinForEarningAYear(year: String) {
+        incomeRepository.getMinForEarningAYear(year).observeForever { min ->
             liveMinForEarningAYear.value = min
         }
     }
 
-    fun getMaxForEarningAYear(year: String){
-        incomeRepository.getMaxForEarningAYear(year).observeForever{ max ->
+    fun getMaxForEarningAYear(year: String) {
+        incomeRepository.getMaxForEarningAYear(year).observeForever { max ->
             liveMeanForEarningAYear.value = max
         }
     }
@@ -77,20 +79,20 @@ class IncomeViewModel(private val incomeRepository: IncomeRepository,
         }
     }
 
-    fun getTotalEarnedAYear(year: String){
-        incomeRepository.getTotalEarnedAYear(year).observeForever{ totalEarned ->
+    fun getTotalEarnedAYear(year: String) {
+        incomeRepository.getTotalEarnedAYear(year).observeForever { totalEarned ->
             _liveEarnedAYear.value = totalEarned
         }
     }
 
-    fun getTotalEarnedAMonth(month: String, year: String){
-        incomeRepository.getTotalEarnedAMonth(month, year).observeForever{ totalEarned ->
+    fun getTotalEarnedAMonth(month: String, year: String) {
+        incomeRepository.getTotalEarnedAMonth(month, year).observeForever { totalEarned ->
             _liveEarnedAMonth.value = totalEarned
         }
     }
 
-    fun getTotalEarnedADay(day: String, month: String, year: String){
-        incomeRepository.getTotalEarnedADay(day, month, year).observeForever{ totalEarned ->
+    fun getTotalEarnedADay(day: String, month: String, year: String) {
+        incomeRepository.getTotalEarnedADay(day, month, year).observeForever { totalEarned ->
             _liveEarnedADay.value = totalEarned
         }
     }
@@ -110,12 +112,13 @@ class IncomeViewModel(private val incomeRepository: IncomeRepository,
                 day = day,
                 month = month,
                 year = year,
-                description=description,
-                earned)
+                description = description,
+                earned
+            )
         }
     }
 
-    fun delete(income: Income){
+    fun delete(income: Income) {
         viewModelScope.launch {
             incomeRepository.deleteUser(income)
         }

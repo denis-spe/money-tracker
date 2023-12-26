@@ -1,120 +1,33 @@
 {
   "project_info": {
-    "project_number": "790389762096",
-    "project_id": "den-ml",
-    "storage_bucket": "den-ml.appspot.com"
+    "project_number": "904841382658",
+    "project_id": "money-tracker-a7866",
+    "storage_bucket": "money-tracker-a7866.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:790389762096:android:e310a4c2b744c4c16e65f5",
-        "android_client_info": {
-          "package_name": "com.den.moneyTracker"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA9_qJBkkjuxxaoLP2ZeQrSmOzEWaxQLaY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:790389762096:android:b5ced58afe3da4b06e65f5",
+        "mobilesdk_app_id": "1:904841382658:android:6fd93fdeb145dda084101b",
         "android_client_info": {
           "package_name": "com.example.moneytracker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
+          "client_id": "904841382658-r33rq02geisaen2jqbev5p15aa27ncch.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA9_qJBkkjuxxaoLP2ZeQrSmOzEWaxQLaY"
+          "current_key": "AIzaSyAslgE9qEjgoxM94p_YU9HkKCXvGiYxGvw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:790389762096:android:a8a3b31eed74b1086e65f5",
-        "android_client_info": {
-          "package_name": "com.example.mtracker"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA9_qJBkkjuxxaoLP2ZeQrSmOzEWaxQLaY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:790389762096:android:5ca1081f69f28a7e6e65f5",
-        "android_client_info": {
-          "package_name": "com.example.testingfirebase"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA9_qJBkkjuxxaoLP2ZeQrSmOzEWaxQLaY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "790389762096-vgtvdmqbkhp0al7eg6g0d1frcie0ned8.apps.googleusercontent.com",
+              "client_id": "904841382658-r33rq02geisaen2jqbev5p15aa27ncch.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

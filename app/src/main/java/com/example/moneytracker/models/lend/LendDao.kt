@@ -9,32 +9,11 @@ import com.example.moneytracker.models.lend.Lend
 
 @Dao
 interface LendDao {
-    @Query("SELECT * FROM Lend")
-    fun getAllLending(): LiveData<List<Lend>>
+    @Query("SELECT lend FROM Lend WHERE year = :year")
+    fun getAllLendingForAYear(year: String): LiveData<List<Double>>
 
-    @Query("SELECT DISTINCT month FROM Lend WHERE year = :year")
-    fun getMonth(year: String): LiveData<List<String>>
-
-    @Query("SELECT DISTINCT year  FROM Lend ORDER BY year")
-    fun getUniqueYear(): LiveData<List<String>>
-
-    @Query("SELECT sum(lend)  FROM Lend WHERE year = :year")
-    fun totalLendAYear(year: String): LiveData<Double>
-
-    @Query("SELECT AVG(lend)  FROM Lend WHERE year = :year")
-    fun getMeanForLendingAYear(year: String): LiveData<Double>
-
-    @Query("SELECT MIN(lend)  FROM Lend WHERE year = :year")
-    fun getMinForLendingAYear(year: String): LiveData<Double>
-
-    @Query("SELECT Max(lend)  FROM Lend WHERE year = :year")
-    fun getMaxForLendingAYear(year: String): LiveData<Double>
-
-    @Query("SELECT sum(lend)  FROM Lend  WHERE year = :year AND month = :month")
-    fun totalLendAMonth(month: String, year: String): LiveData<Double>
-
-    @Query("SELECT sum(lend)  FROM Lend WHERE year = :year AND month = :month AND day = :day")
-    fun totalLendADay(day: String, month: String, year: String): LiveData<Double>
+    @Query("SELECT description FROM Lend WHERE year = :year")
+    fun getAllDescriptionsForAYear(year: String): LiveData<List<String>>
 
     @Insert
     fun insertLend(lend: Lend)

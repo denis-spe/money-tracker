@@ -10,8 +10,10 @@ import com.example.moneytracker.models.lend.Lend
 import com.example.moneytracker.models.lend.LendRepository
 import kotlinx.coroutines.launch
 
-class ExpenseViewModel(private val expenseRepository: ExpenseRepository,
-                       @SuppressLint("StaticFieldLeak") private val applicationContext: Context) : ViewModel() {
+class ExpenseViewModel(
+    private val expenseRepository: ExpenseRepository,
+    @SuppressLint("StaticFieldLeak") private val applicationContext: Context
+) : ViewModel() {
 
     private val _expenseLiveData = MutableLiveData<List<Expense>>()
     val expenseLiveData: LiveData<List<Expense>> get() = _expenseLiveData
@@ -43,20 +45,20 @@ class ExpenseViewModel(private val expenseRepository: ExpenseRepository,
     private val _liveMaxForExpenseAYear = MutableLiveData<Double>()
     val liveMaxForExpenseAYear: MutableLiveData<Double> get() = _liveMaxForExpenseAYear
 
-    fun getMeanForExpenseAYear(year: String){
-        expenseRepository.getMeanForExpenseAYear(year).observeForever{ mean ->
+    fun getMeanForExpenseAYear(year: String) {
+        expenseRepository.getMeanForExpenseAYear(year).observeForever { mean ->
             liveMeanForExpenseAYear.value = mean
         }
     }
 
-    fun getMinForExpenseAYear(year: String){
-        expenseRepository.getMinForExpenseAYear(year).observeForever{ min ->
+    fun getMinForExpenseAYear(year: String) {
+        expenseRepository.getMinForExpenseAYear(year).observeForever { min ->
             liveMinForExpenseAYear.value = min
         }
     }
 
-    fun getMaxForExpenseAYear(year: String){
-        expenseRepository.getMaxForExpenseAYear(year).observeForever{ max ->
+    fun getMaxForExpenseAYear(year: String) {
+        expenseRepository.getMaxForExpenseAYear(year).observeForever { max ->
             liveMeanForExpenseAYear.value = max
         }
     }
@@ -79,20 +81,20 @@ class ExpenseViewModel(private val expenseRepository: ExpenseRepository,
         }
     }
 
-    fun getTotalExpenseAYear(year: String){
-        expenseRepository.getTotalExpenseAYear(year).observeForever{ totalExpense ->
+    fun getTotalExpenseAYear(year: String) {
+        expenseRepository.getTotalExpenseAYear(year).observeForever { totalExpense ->
             _liveExpenseAYear.value = totalExpense
         }
     }
 
-    fun getTotalExpenseAMonth(month: String, year: String){
-        expenseRepository.getTotalExpenseAMonth(month, year).observeForever{ totalEarned ->
+    fun getTotalExpenseAMonth(month: String, year: String) {
+        expenseRepository.getTotalExpenseAMonth(month, year).observeForever { totalEarned ->
             _liveExpenseAMonth.value = totalEarned
         }
     }
 
-    fun getTotalExpenseADay(day: String, month: String, year: String){
-        expenseRepository.getTotalExpenseADay(day, month, year).observeForever{ totalEarned ->
+    fun getTotalExpenseADay(day: String, month: String, year: String) {
+        expenseRepository.getTotalExpenseADay(day, month, year).observeForever { totalEarned ->
             _liveExpenseADay.value = totalEarned
         }
     }
@@ -118,7 +120,7 @@ class ExpenseViewModel(private val expenseRepository: ExpenseRepository,
         }
     }
 
-    fun deleteExpense(expense: Expense){
+    fun deleteExpense(expense: Expense) {
         viewModelScope.launch {
             expenseRepository.deleteExpense(expense)
         }

@@ -21,7 +21,7 @@ class DebtRepository(private val debtDao: DebtDao) {
         year: String,
         debt: Double,
         description: String,
-    ){
+    ) {
         val debts = Debts(
             dayOfWeek = dayOfWeek,
             day = day,
@@ -35,7 +35,7 @@ class DebtRepository(private val debtDao: DebtDao) {
         }
     }
 
-    suspend fun deleteDebt(debts: Debts){
+    suspend fun deleteDebt(debts: Debts) {
         withContext(Dispatchers.IO) {
             debtDao.deleteDebts(debts)
         }

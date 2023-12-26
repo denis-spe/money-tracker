@@ -14,27 +14,27 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         return expenseDao.getMonth(year)
     }
 
-    fun getMeanForExpenseAYear(year: String): LiveData<Double>{
+    fun getMeanForExpenseAYear(year: String): LiveData<Double> {
         return expenseDao.getMeanForEarningAYear(year)
     }
 
-    fun getMinForExpenseAYear(year: String): LiveData<Double>{
+    fun getMinForExpenseAYear(year: String): LiveData<Double> {
         return expenseDao.getMinForEarningAYear(year)
     }
 
-    fun getMaxForExpenseAYear(year: String): LiveData<Double>{
+    fun getMaxForExpenseAYear(year: String): LiveData<Double> {
         return expenseDao.getMaxForEarningAYear(year)
     }
 
-    fun getTotalExpenseAYear(year: String): LiveData<Double>{
+    fun getTotalExpenseAYear(year: String): LiveData<Double> {
         return expenseDao.totalEarnedAYear(year)
     }
 
-    fun getTotalExpenseAMonth(month: String, year: String): LiveData<Double>{
+    fun getTotalExpenseAMonth(month: String, year: String): LiveData<Double> {
         return expenseDao.totalEarnedAMonth(month, year)
     }
 
-    fun getTotalExpenseADay(day: String, month: String, year: String): LiveData<Double>{
+    fun getTotalExpenseADay(day: String, month: String, year: String): LiveData<Double> {
         return expenseDao.totalEarnedADay(day, month, year)
     }
 
@@ -49,7 +49,7 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         year: String,
         expense: Double,
         description: String,
-    ){
+    ) {
         val expense = Expense(
             dayOfWeek = dayOfWeek,
             day = day,
@@ -63,7 +63,7 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         }
     }
 
-    suspend fun deleteExpense(expense: Expense){
+    suspend fun deleteExpense(expense: Expense) {
         withContext(Dispatchers.IO) {
             expenseDao.deleteExpense(expense)
         }

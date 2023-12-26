@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class DebtViewModel(private val debtRepository: DebtRepository,
-                    @SuppressLint("StaticFieldLeak") private val applicationContext: Context) : ViewModel() {
+class DebtViewModel(
+    private val debtRepository: DebtRepository,
+    @SuppressLint("StaticFieldLeak") private val applicationContext: Context
+) : ViewModel() {
 
     // Get live expense a year
     private val _liveDebtsAYear = MutableLiveData<List<Double>>()
@@ -17,14 +19,14 @@ class DebtViewModel(private val debtRepository: DebtRepository,
     private val _liveDescAYear = MutableLiveData<List<String>>()
     val liveDescAYear: MutableLiveData<List<String>> get() = _liveDescAYear
 
-    fun getAllDescriptionForAYear(year: String){
-        debtRepository.getAllDescriptionsForAYear(year).observeForever{ description ->
+    fun getAllDescriptionForAYear(year: String) {
+        debtRepository.getAllDescriptionsForAYear(year).observeForever { description ->
             _liveDescAYear.value = description
         }
     }
 
-    fun getAllDebtsForAYear(year: String){
-        debtRepository.getAllDebtsForAYear(year).observeForever{ debts ->
+    fun getAllDebtsForAYear(year: String) {
+        debtRepository.getAllDebtsForAYear(year).observeForever { debts ->
             _liveDebtsAYear.value = debts
         }
     }
@@ -50,7 +52,7 @@ class DebtViewModel(private val debtRepository: DebtRepository,
         }
     }
 
-    fun deleteDebts(debt: Debts){
+    fun deleteDebts(debt: Debts) {
         viewModelScope.launch {
             debtRepository.deleteDebt(debt)
         }

@@ -4,18 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.moneytracker.models.debts.DebtViewModel
-import com.example.moneytracker.models.expense.Expense
 import com.example.moneytracker.models.expense.ExpenseViewModel
-import com.example.moneytracker.models.lend.LendViewModel
 import com.example.moneytracker.models.income.IncomeViewModel
-import com.example.moneytracker.pages.main.MainPage
-import com.example.moneytracker.pages.MonthPage
+import com.example.moneytracker.models.lend.LendViewModel
+import com.example.moneytracker.pages.pagingManager.PagingManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -28,34 +23,40 @@ fun App(
     expenseViewModel: ExpenseViewModel,
     lendViewModel: LendViewModel,
     debtViewModel: DebtViewModel,
+    auth: FirebaseAuth,
+    currentUser: FirebaseUser?,
 ) {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "HomePage") {
-        composable("HomePage") { MainPage (
-            navController = navController,
-            incomeViewModel = incomeViewModel,
-            expenseViewModel = expenseViewModel,
-            lendViewModel = lendViewModel,
-            debtViewModel=debtViewModel
-        ) }
-
-        composable(
-            "YearPage/{year}",
-            arguments = listOf(
-                navArgument("year") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val year = backStackEntry.arguments?.getString("year")
-            if (year != null) {
-                MonthPage(
-                    year,
-                    navController = navController,
-                    incomeViewModel = incomeViewModel,
-                    expenseViewModel = expenseViewModel,
-                    lendViewModel = lendViewModel,
-                    debtViewModel=debtViewModel
-                )
-            }
-        }
-    }
+//    val navController = rememberNavController()
+//    NavHost(navController = navController, startDestination = "HomePage") {
+//        composable("HomePage") { MainPage (
+//            navController = navController,
+//            incomeViewModel = incomeViewModel,
+//            expenseViewModel = expenseViewModel,
+//            lendViewModel = lendViewModel,
+//            debtViewModel=debtViewModel
+//        ) }
+//
+//        composable(
+//            "YearPage/{year}",
+//            arguments = listOf(
+//                navArgument("year") { type = NavType.StringType }
+//            )
+//        ) { backStackEntry ->
+//            val year = backStackEntry.arguments?.getString("year")
+//            if (year != null) {
+//                MonthPage(
+//                    year,
+//                    navController = navController,
+//                    incomeViewModel = incomeViewModel,
+//                    expenseViewModel = expenseViewModel,
+//                    lendViewModel = lendViewModel,
+//                    debtViewModel=debtViewModel
+//                )
+//            }
+//        }
+//    }
+    PagingManager(
+        auth = auth,
+        currentUser = currentUser
+    )
 }
